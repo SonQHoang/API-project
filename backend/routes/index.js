@@ -1,6 +1,9 @@
 // backend/routes/index.js
 const express = require('express');
 const router = express.Router();
+const apiRouter = require('./api')
+
+router.use('/api', apiRouter)
 
 // For testing that the server is up and running
 // router.get('/hello/world', function(req, res) {

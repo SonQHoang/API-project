@@ -3,6 +3,11 @@ const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api')
 
+router.use((req, res, next) => {
+  console.log('/////')
+  next()
+})
+
 router.use('/api', apiRouter)
 
 // For testing that the server is up and running

@@ -1,15 +1,20 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('users', 'firstName', {
+    options.tableName = 'Users'; // 
+    await queryInterface.addColumn(options, 'firstName', {
       type: Sequelize.STRING,
-    })
+    });
 
-    await queryInterface.addColumn('users', 'lastName', {
+    await queryInterface.addColumn(options, 'lastName', {
       type: Sequelize.STRING,
-    })
+    });
     /**
      * Add altering commands here.
      *
@@ -19,8 +24,9 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn('users', 'firstName'),
-    await queryInterface.removeColumn('users', 'lastName')
+    options.tableName = 'Users'; // 
+    await queryInterface.removeColumn(options, 'firstName'),
+    await queryInterface.removeColumn(options, 'lastName')
 
     /**
      * Add reverting commands here.

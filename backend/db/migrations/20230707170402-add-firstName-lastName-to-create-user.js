@@ -15,24 +15,11 @@ module.exports = {
     await queryInterface.addColumn(options, 'lastName', {
       type: Sequelize.STRING,
     });
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Users'; // 
     await queryInterface.removeColumn(options, 'firstName'),
     await queryInterface.removeColumn(options, 'lastName')
-
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
   }
 };

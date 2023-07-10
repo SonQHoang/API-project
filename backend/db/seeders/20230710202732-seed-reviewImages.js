@@ -11,7 +11,7 @@ module.exports = {
 
   async up (queryInterface, Sequelize) {
     options.tableName = 'ReviewImages';
-    await ReviewImage.bulkCreate([
+    await ReviewImage.bulkCreate(options,[
       {
         reviewId: 1,
         url: 'https://www.yosemite.com/wp-content/uploads/2023/04/Vernal-Fall-Yosemite-Mariposa-Things-To-Do-Slide-.jpg',

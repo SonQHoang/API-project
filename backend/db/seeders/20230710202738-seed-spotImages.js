@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'SpotImages';
-    await SpotImage.bulkCreate([
+    await SpotImage.bulkCreate(options,[
       {
         spotId: 1,
         url: 'https://www.yosemite.com/wp-content/uploads/2023/04/Vernal-Fall-Yosemite-Mariposa-Things-To-Do-Slide-.jpg',

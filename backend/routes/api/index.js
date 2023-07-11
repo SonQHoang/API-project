@@ -25,11 +25,11 @@ router.use("/review-images", reviewImagesRouter);
 router.use("/bookings", bookingsRouter);
 
 
-router.post('/test', function (req, res) {
-    res.json({
-        requestBody: req.body
-    })
-})
+// router.post('/test', function (req, res) {
+//     res.json({
+//         requestBody: req.body
+//     })
+// })
 
 // ----------  For Testing Authorization --------- //
 

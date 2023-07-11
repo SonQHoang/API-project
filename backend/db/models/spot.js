@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
           hooks: true
         }
       )
-
       Spot.hasMany(
         models.SpotImage, {
           foreignKey: "spotId",
@@ -24,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
           hooks: true
         }
       )
-
       Spot.hasMany(
         models.Review, {
           foreignKey: "spotId",
@@ -32,19 +30,24 @@ module.exports = (sequelize, DataTypes) => {
           hooks: true
         }
       )
-
       Spot.belongsTo(
         models.User, {
-          foreignKey: 'userId'
+          foreignKey: 'ownerId',
+          as: "Owner"
         }
       )
-      Spot.belongsToMany(
-        models.User, {
+      Spot.belongsToMany(models.User, {
           through: models.Review,
           foreignKey: 'spotId',
           otherKey: 'userId'
         }
       )
+      Spot.belongsToMany(models.User, {
+        through: models.Booking,
+        foreignKey: "spotId",
+        otherKey: "userId",
+      });
+
     }
   }
   Spot.init({
@@ -78,13 +81,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isNumeric: true
+        isNumeric: true,
+        min: -50,
+        max: 50
       }
     },
     lng: {
       type: DataTypes.FLOAT,
       validate: {
-        isNumeric: true
+        isNumeric: true,
+        min: -150,
+        max: 150
       }
     },
     name: {

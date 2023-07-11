@@ -43,7 +43,7 @@ if (!isProduction) {
       }
     })
   );
-  // const routes = require('./routes');
+  app.use(routes)
 
 app.use(routes);
   app.use((_req, _res, next) => {
@@ -67,7 +67,6 @@ app.use(routes);
     next(err);
   });
 
-  app.use(routes)
 
   app.use((err, _req, res, _next) => {
     res.status(err.status || 500);

@@ -5,31 +5,31 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { Spot, SpotImage } = require("../../db/models");
 const router = express.Router();
 
-// Deleting Spot Image
 
-router.delete('/:imageId', requireAuth, async (req, res, next) => {
+// Delete a Spot's Image
+
+router.delete("/:imageId", requireAuth, async (req, res, next) => {
     let spotImage = await SpotImage.findByPk(req.params.imageId, {
-        include: [{ model: Spot}]
-    })
+        include: [{model: Spot}]
+    });
 
-    if(!spotImage) {
+    if (!spotImage) {
         res.status(404);
         return res.json({
-            message: "Spot image couldn't be found",
+            message: "Spot Image couldn't be found"
         })
     }
 
-    if(spotImage.Spot.ownerId !== req.user.id) {
+    if (spotImage.ownerId !== req.user.id) {
         return res.status(403).json({
             message: "Spot must belong to the current user"
         })
     }
 
-    await spotImage.destroy()
+    await spotImage.destroy();
 
     res.json({
         message: "Successfully deleted"
     })
 })
-
 module.exports = router;

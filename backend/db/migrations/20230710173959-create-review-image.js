@@ -14,14 +14,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ownerId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users"
-        },
-        onDelete: "CASCADE"
-      },
+      // ownerId: {
+      //   allowNull: false,
+      //   type: Sequelize.INTEGER,
+      //   references: {
+      //     model: "Users"
+      //   },
+      //   onDelete: "CASCADE"
+      // },
       reviewId: {
         type: Sequelize.INTEGER,
         allowNull: false,

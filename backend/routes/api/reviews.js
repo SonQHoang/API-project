@@ -38,13 +38,53 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
         })
     }
 
-    const newReviewImage = await ReviewImage.create({
+    const newReviewImage= await ReviewImage.create({
         reviewId: req.params.reviewId,
         url: req.body.url
     })
     res.json({
         id: newReviewImage.id,
         url: newReviewImage.url
+    })
+})
+
+// Getting all User Reviews
+
+router.get('/current', requireAuth, async (req, res) => {
+    let totalReviews = await Review.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ["id", 'firstName', "lastName"]
+            },
+            {
+                model: ReviewImage,
+                attributes: ["id", 'url']
+            },
+            {
+                model: Spot,
+                attributes: [
+                    'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price',
+                ],
+                include: [{
+                    model: SpotImage,
+                    attributes: ['url']
+                }]
+            }
+        ],
+        where: {
+            userId: req.user.id
+        }
+    });
+    let reviewImages = totalReviews.map((review) => {
+        let jsonReview = review.toJSON();
+        if(jsonReview.Spot.SpotImages.length) {
+            jsonReview.Spot.previewImage = jsonReview.Spot.SpotImages[0].url
+        }
+        return jsonReview
+    })
+    res.json({
+        Reviews: reviewImages
     })
 })
 

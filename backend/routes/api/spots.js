@@ -64,43 +64,39 @@ router.get('/', spotErrorValidator, async (req, res) => {
     // spot filter
 
     const where = {};
-    if (minPrice && maxPrice)
-        where.price = { [Op.between]: [minPrice, maxPrice] };
+    if (minPrice && maxPrice) where.price = { [Op.between]: [minPrice, maxPrice] };
     if (maxLat && minLat) where.lat = { [Op.between]: [minLat, maxLat] };
     if (minLng && maxLng) where.lng = { [Op.between]: [minLng, maxLng] };
 
 
     const spots = await Spot.findAll({
-        include: [{ model: Review }, { model: SpotImage, attributes: ["url"] }],
+        include: [{model: Review}, { model: SpotImage, attributes: ['url']}],
         where,
         limit: size,
-        offset: size * (page - 1),
+        offset: size * (page - 1)
     });
 
-    let spotWithRatings = spots.map((spot) => {
-        let spotJson = spot.toJSON();
-        console.log(spotJson);
+    let spotRating = spots.map((spot) => {
+        let jsonSpot = spot.toJSON();
+
         let totalRating = 0;
-        let reviews = spotJson.Reviews;
-        // console.log(reviews);
+        let reviews = jsonSpot.Reviews;
 
         reviews.forEach((review) => {
             totalRating += review.stars;
-            // console.log(totalRating);
-        });
-        const avgRating = (totalRating / reviews.length).toFixed(2);
-        spotJson.avgRating = avgRating;
-        // console.log(spot);
-        if (spotJson.SpotImages.length) {
-            spotJson.previewImage = spotJson.SpotImages[0].url;
-        }
-        delete spotJson.Reviews;
-        delete spotJson.SpotImages;
+        })
 
-        return spotJson;
-    });
-    // console.log(spotWithRatings);
-    res.json({ Spots: spotWithRatings, page, size });
+        const averageRating = (totalRating / reviews.length);
+        jsonSpot.averageRating = averageRating;
+
+        if(jsonSpot.SpotImages.length) {
+            jsonSpot.previewImage = jsonSpot.SpotImages[0].url
+        }
+        return jsonSpot
+    })
+    res.json({
+        Spots: spotRating, page, size
+    })
 })
 
 const spotChecker = (req, res, next) => {
@@ -179,11 +175,9 @@ router.get('/current', requireAuth, async (req, res) => {
 
         reviews.forEach((review) => {
             totalRating += review.stars;
-            // console.log(totalRating);
           });
           const avgRating = (totalRating / reviews.length).toFixed(2);
           spotJson.avgRating = avgRating;
-          // console.log(spot);
           if (spotJson.SpotImages.length) {
             spotJson.previewImage = spotJson.SpotImages[0].url;
           }
@@ -192,7 +186,6 @@ router.get('/current', requireAuth, async (req, res) => {
       
           return spotJson;
         });
-        // console.log(userSpots);
         res.json({ Spots: userSpots });
       });
 
@@ -215,7 +208,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     }
 
     const { url, preview } = req.body;
-    const newSpotImage = await SpotImage.ecreate({
+    const newSpotImage = await SpotImage.create({
         spotId: req.params.spotId,
         url,
         preview

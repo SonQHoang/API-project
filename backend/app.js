@@ -11,11 +11,10 @@ const isProduction = environment === 'production';
 
 const { ValidationError } = require('sequelize');
 
-const routes = require('./routes')
 
 const app = express();
 
-app.use(morgan('db'));
+app.use(morgan('dev'));
 
 app.use(cookieParser());
 app.use(express.json());
@@ -43,6 +42,9 @@ if (!isProduction) {
       }
     })
   );
+
+  const routes = require('./routes')
+
   app.use(routes)
 
 app.use(routes);

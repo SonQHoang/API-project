@@ -16,12 +16,11 @@ const queryFilterForGettingSpots = (req, res, next) => {
     page = parseInt(page);
     size = parseInt(size);
 
-
     let errors = {}
 
     // error checking for page and size
-    if (page || page < 1) errorResult.errors.push.page = "Page must be greater than or equal to 1";
-    if (page || page < 1) errorResult.errors.push.size = "Size must be greater than or equal to 1";
+    if (page || page < 1) errors.page = "Page must be greater than or equal to 1";
+    if (page || page < 1) errors.size = "Size must be greater than or equal to 1";
 
     // error checking for min 
     // is there a specific value for min / lat? I'm guessing outside of the range given from the API documentation
@@ -156,8 +155,7 @@ router.post('/', requireAuth, spotChecker, async (req, res) => {
         description,
         price,
     });
-    res.status(201);
-    res.json(newSpot);
+    res.status(201).json(newSpot)
 });
 
 module.exports = router;

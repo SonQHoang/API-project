@@ -9,7 +9,7 @@ const { Spot, User, Booking, SpotImage, Review, ReviewImage } = require('../../d
 const router = express.Router()
 
 
-const spotErrorValidator = (req, res, next) => {
+const spotValidator = (req, res, next) => {
     let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query
 
 
@@ -53,8 +53,8 @@ const spotErrorValidator = (req, res, next) => {
     next()
 }
 
-// get All Spots
-router.get('/', spotErrorValidator, async (req, res) => {
+// Getting All Spots
+router.get('/', spotValidator, async (req, res) => {
 
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
 
@@ -82,15 +82,12 @@ router.get('/', spotErrorValidator, async (req, res) => {
         console.log(spotJson);
         let totalRating = 0;
         let reviews = spotJson.Reviews;
-        // console.log(reviews);
 
         reviews.forEach((review) => {
             totalRating += review.stars;
-            // console.log(totalRating);
         });
         const avgRating = (totalRating / reviews.length).toFixed(2);
         spotJson.avgRating = avgRating;
-        // console.log(spot);
         if (spotJson.SpotImages.length) {
             spotJson.previewImage = spotJson.SpotImages[0].url;
         }
@@ -99,9 +96,40 @@ router.get('/', spotErrorValidator, async (req, res) => {
 
         return spotJson;
     });
-    // console.log(spotWithRatings);
     res.json({ Spots: spotWithRatings, page, size });
 })
+
+// Create Image for Spot
+
+router.post('/:spotId/images', requireAuth, async (req, res) => {
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    if (!spot) {
+        res.status(404);
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    if (spot.ownerId !== req.user.id) {
+        return res.status(403).json({
+            message: "Spot must belong to the current user",
+        })
+    }
+
+    const { url, preview } = req.body;
+    const newSpotImage = await SpotImage.create({
+        spotId: req.params.spotId,
+        url,
+        preview
+    });
+    res.json({
+        id: newSpotImage.id,
+        url: newSpotImage.url,
+        preview: newSpotImage.preview
+    });
+});
+
 
 const spotChecker = (req, res, next) => {
     const {
@@ -137,27 +165,6 @@ const spotChecker = (req, res, next) => {
 
     next();
 };
-
-// Create a Spot
-
-router.post('/', requireAuth, spotChecker, async (req, res) => {
-    const { address, city, state, country, lat, lng, name, description, price } = req.body;
-
-    const newSpot = await Spot.create({
-        ownerId: req.user.id,
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-    });
-    res.status(201)
-    res.json(newSpot)
-});
 
 // Get Spot of a Current User
 
@@ -195,38 +202,6 @@ router.get('/current', requireAuth, async (req, res) => {
         // console.log(userSpots);
         res.json({ Spots: userSpots });
       });
-
-// Create Image for Spot
-
-router.post('/:spotId/images', requireAuth, async (req, res) => {
-    const spot = await Spot.findByPk(req.params.spotId);
-
-    if (!spot) {
-        res.status(404);
-        res.json({
-            message: "Spot couldn't be found"
-        })
-    }
-
-    if (spot.ownerId !== req.user.id) {
-        return res.status(403).json({
-            message: "Forbidden, Spot must belong to the current user",
-        })
-    }
-
-    const { url, preview } = req.body;
-    const newSpotImage = await SpotImage.ecreate({
-        spotId: req.params.spotId,
-        url,
-        preview
-    });
-    res.json({
-        id: newSpotImage.id,
-        url: newSpotImage.url,
-        preview: newSpotImage.preview
-    });
-});
-
 
 // Edit Spot
 

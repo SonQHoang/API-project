@@ -13,7 +13,7 @@ const { restoreUser } = require('../../utils/auth.js')
 // const { User } = require('../../db/models');
 
 // requireAuth
-const { requireAuth } = require('../../utils/auth.js');
+// const { requireAuth } = require('../../utils/auth.js');
 
 router.use(restoreUser);
 router.use('/session', sessionRouter);

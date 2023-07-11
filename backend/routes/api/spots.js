@@ -70,33 +70,40 @@ router.get('/', spotErrorValidator, async (req, res) => {
 
 
     const spots = await Spot.findAll({
-        include: [{model: Review}, { model: SpotImage, attributes: ['url']}],
+        include: [{ model: Review }, { model: SpotImage, attributes: ['url'] }],
         where,
         limit: size,
-        offset: size * (page - 1)
-    });
+        offset: size * (page - 1),
+      });
 
-    let spotRating = spots.map((spot) => {
-        let jsonSpot = spot.toJSON();
+      let spotRating = spots.map((spot) => {
+          let jsonSpot = spot.toJSON();
+          
+          let totalRating = 0;
+          let reviews = jsonSpot.Reviews;
 
-        let totalRating = 0;
-        let reviews = jsonSpot.Reviews;
-
-        reviews.forEach((review) => {
+          reviews.forEach((review) => {
             totalRating += review.stars;
-        })
-
-        const averageRating = (totalRating / reviews.length);
+          })
+        
+        const averageRating = totalRating / reviews.length
         jsonSpot.averageRating = averageRating;
+      
+        if (jsonSpot.SpotImages.length) {
+            jsonSpot.previewImage = jsonSpot.SpotImages[0].url;
+          }
 
-        if(jsonSpot.SpotImages.length) {
-            jsonSpot.previewImage = jsonSpot.SpotImages[0].url
-        }
-        return jsonSpot
-    })
-    res.json({
-        Spots: spotRating, page, size
-    })
+        delete jsonSpot.SpotImages;
+        delete jsonSpot.Reviews;
+      
+        return jsonSpot;
+      });
+      
+      res.json({
+        Spots: spotRating,
+        page,
+        size,
+      });
 })
 
 const spotChecker = (req, res, next) => {
@@ -220,6 +227,58 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     });
 });
 
+// validating Reviews
+
+const reviewValidator = (req, res, next) => {
+    const { review, stars } = req.body;
+
+    const errors = {};
+    if (!review) errors.review = "Review text is required";
+    if (stars > 5 || stars < 1 || isNaN(stars)) errors.stars = "Stars must be an integer from 1 to 5"
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: "Bad Request",
+            error: errors
+        });
+    };
+    next()
+}
+
+// Creating a new Review
+
+router.post('/:spotId/reviews', requireAuth, reviewValidator, async (req, res) => {
+    const spot = await Spot.findByPk(req.params.spotId);
+    if (!spot) {
+        res.status(404);
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    const findingExistingReview = await Review.findOne({
+        where: {
+            userId: req.user.id,
+            spotId: req.params.spotId
+        }
+    })
+
+    if(findingExistingReview) {
+        res.status(500)
+        return res.json({
+            message: "User already has a review for this spot"
+        })
+    }
+    const { review, stars } = req.body;
+    const newReview = await Review.create({
+        userId: req.user.id,
+        spotId: req.params.spotId,
+        review,
+        stars
+    })
+    res.status(201);
+    res.json(newReview)
+})
 
 // Edit Spot
 

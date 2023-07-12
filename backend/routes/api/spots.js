@@ -341,11 +341,7 @@ router.post('/:spotId/reviews', requireAuth, reviewValidator, async (req, res) =
     res.json(newReview)
 })
 
-//------------------------------------------------------------------Get All Reviews of Current User----------------------------------------------
-
-
-
-//------------------------------------------------------------------Edit A Spot ----------------------------------------------
+//---------------------------------------------------------------------Edit A Spot ----------------------------------------------
 
 router.put('/:spotId', requireAuth, spotChecker, async (req, res) => {
     let spot = await Spot.findByPk(req.params.spotId);

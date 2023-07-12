@@ -27,7 +27,7 @@ const reviewValidator = (req, res, next) => {
     }
 }
 
-// Adding image to review based on Review Id
+//------------------------------------------------------------------Adding Image Based on Review Id----------------------------------------------
 
 router.post('/:reviewId/images', requireAuth, async (req, res) => {
     const review = await Review.findByPk(req.params.reviewId);
@@ -56,7 +56,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     })
 })
 
-// Getting all User Reviews
+//------------------------------------------------------------------Get All Reviews of Current User----------------------------------------------
 
 router.get('/current', requireAuth, async (req, res) => {
     let totalReviews = await Review.findAll({
@@ -77,6 +77,8 @@ router.get('/current', requireAuth, async (req, res) => {
         if (jsonReview.Spot.SpotImages.length) {
             jsonReview.Spot.previewImage = jsonReview.Spot.SpotImages[0].url
         }
+        delete jsonReview.Spot.SpotImages
+
         return jsonReview
     })
     res.json({ Reviews: reviewImages })

@@ -249,6 +249,19 @@ router.get('/:spotId', async (req, res) => {
             message: `Spot couldn't be found`
         })
     }
+
+    let jsonSpot = spot.toJSON();
+    let reviews = jsonSpot.Reviews;
+    jsonSpot.numReviews = reviews.length;
+    let totalRating = 0;
+    reviews.forEach((review => {
+        totalRating += review.stars;
+    }))
+
+    const avgRating = totalRating / reviews.length
+    jsonSpot.avgRating = avgRating
+    delete jsonSpot.Reviews;
+    res.json(jsonSpot)
 })
 
 // Get Spot of a Current User

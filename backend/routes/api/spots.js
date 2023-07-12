@@ -139,8 +139,8 @@ router.get('/', spotValidator, async (req, res) => {
             totalRating += review.stars;
           })
         
-        const averageRating = totalRating / reviews.length
-        jsonSpot.averageRating = averageRating;
+        const avgRating = totalRating / reviews.length
+        jsonSpot.avgRating = avgRating;
       
         if (jsonSpot.SpotImages.length) {
             jsonSpot.previewImage = jsonSpot.SpotImages[0].url;
@@ -151,12 +151,28 @@ router.get('/', spotValidator, async (req, res) => {
       
         return jsonSpot;
       });
-      
-      res.json({
-        Spots: spotRating,
-        page,
-        size,
-      });
+    
+      // preview Images isn't coming up... going to work on other end points for now
+      let response = {
+        Spots: spotRating.map((spot) => ({
+          id: spot.id,
+          ownerId: spot.ownerId,
+          address: spot.address,
+          city: spot.city,
+          state: spot.state,
+          country: spot.country,
+          lat: spot.lat,
+          lng: spot.lng,
+          name: spot.name,
+          description: spot.description,
+          price: spot.price,
+          createdAt: spot.createdAt,
+          updatedAt: spot.updatedAt,
+          avgRating: spot.avgRating,
+          previewImage: spot.previewImage,
+        })),
+    }
+    res.json(response)
 })
 
 // Create a Spot
@@ -209,6 +225,31 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         preview: newSpotImage.preview
     });
 });
+
+// Getting Spot Details based on Spot Id
+
+router.get('/:spotId', async (req, res) => {
+    const spot = await Spot.findByPk(req.params.spotId, {
+        include: [
+            {
+                model: Review
+            },
+            {
+                model: SpotImage,
+                attributes: [
+                    "id", 'url', "preview"
+                ]
+            },
+            {
+                model: User,
+                as: "Owner",
+                attributes: [
+                    "id", 'firstName', "lastName"
+                ]
+            }
+        ]
+    })
+})
 
 // Get Spot of a Current User
 

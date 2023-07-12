@@ -53,6 +53,59 @@ const spotValidator = (req, res, next) => {
     next()
 }
 
+const spotChecker = (req, res, next) => {
+    const {
+        ownerId,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+    } = req.body;
+
+    const errors = {};
+    if (!address) errors.address = "Street address is required";
+    if (!city) errors.city = "City is required";
+    if (!state) errors.state = "State is required";
+    if (!country) errors.country = "Country is required";
+    if (lat < -50 || lat > 50) errors.lat = "Latitude is not valid";
+    if (lng < -150 || lng > 150) errors.lng = "Longitude is not valid";
+    if (name.length >= 50) errors.name = "Name must be less than 50 characters";
+    if (!description) errors.description = "Description is required";
+    if (!price) errors.price = "Price per day is required";
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: "Bad Request",
+            errors: errors,
+        });
+    }
+
+    next();
+};
+
+// validating Reviews
+
+const reviewValidator = (req, res, next) => {
+    const { review, stars } = req.body;
+
+    const errors = {};
+    if (!review) errors.review = "Review text is required";
+    if (stars > 5 || stars < 1 || isNaN(stars)) errors.stars = "Stars must be an integer from 1 to 5"
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: "Bad Request",
+            error: errors
+        });
+    };
+    next()
+}
+
 // Getting All Spots
 router.get('/', spotValidator, async (req, res) => {
 
@@ -106,6 +159,26 @@ router.get('/', spotValidator, async (req, res) => {
       });
 })
 
+// Create a Spot
+router.post('/', requireAuth, spotChecker, async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
+
+    const newSpot = await Spot.create({
+        ownerId: req.user.id,
+        address,
+        city,
+        state,
+        country,
+        lat,
+        lng,
+        name,
+        description,
+        price
+    })
+    res.status(201);
+    res.json(newSpot)
+})
+
 // Create Image for Spot
 
 router.post('/:spotId/images', requireAuth, async (req, res) => {
@@ -136,42 +209,6 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
         preview: newSpotImage.preview
     });
 });
-
-
-const spotChecker = (req, res, next) => {
-    const {
-        ownerId,
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-    } = req.body;
-
-    const errors = {};
-    if (!address) errors.address = "Street address is required";
-    if (!city) errors.city = "City is required";
-    if (!state) errors.state = "State is required";
-    if (!country) errors.country = "Country is required";
-    if (lat < -90 || lat > 90) errors.lat = "Latitude is not valid";
-    if (lng < -180 || lng > 180) errors.lng = "Longitude is not valid";
-    if (name.length >= 50) errors.name = "Name must be less than 50 )characters";
-    if (!description) errors.description = "Description is required";
-    if (!price) errors.price = "Price per day is required";
-
-    if (Object.keys(errors).length > 0) {
-        return res.status(400).json({
-            message: "Bad Request",
-            errors: errors,
-        });
-    }
-
-    next();
-};
 
 // Get Spot of a Current User
 
@@ -206,55 +243,6 @@ router.get('/current', requireAuth, async (req, res) => {
         });
         res.json({ Spots: userSpots });
       });
-
-// Create Image for Spot
-
-router.post('/:spotId/images', requireAuth, async (req, res) => {
-    const spot = await Spot.findByPk(req.params.spotId);
-
-    if (!spot) {
-        res.status(404);
-        res.json({
-            message: "Spot couldn't be found"
-        })
-    }
-
-    if (spot.ownerId !== req.user.id) {
-        return res.status(403).json({
-            message: "Forbidden, Spot must belong to the current user",
-        })
-    }
-
-    const { url, preview } = req.body;
-    const newSpotImage = await SpotImage.create({
-        spotId: req.params.spotId,
-        url,
-        preview
-    });
-    res.json({
-        id: newSpotImage.id,
-        url: newSpotImage.url,
-        preview: newSpotImage.preview
-    });
-});
-
-// validating Reviews
-
-const reviewValidator = (req, res, next) => {
-    const { review, stars } = req.body;
-
-    const errors = {};
-    if (!review) errors.review = "Review text is required";
-    if (stars > 5 || stars < 1 || isNaN(stars)) errors.stars = "Stars must be an integer from 1 to 5"
-
-    if (Object.keys(errors).length > 0) {
-        return res.status(400).json({
-            message: "Bad Request",
-            error: errors
-        });
-    };
-    next()
-}
 
 // Creating a new Review
 
@@ -331,6 +319,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
     let spot = await Spot.findByPk(req.params.spotId);
 
     if (!spot) {
+        res.status(404)
         return res.json({
             message: "Spot couldn't be found"
         })

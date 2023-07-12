@@ -8,6 +8,7 @@ const { Spot, User, Booking, SpotImage, Review, ReviewImage } = require('../../d
 
 const router = express.Router()
 
+//------------------------------------------------------------------spotQueryFilter----------------------------------------------
 
 const spotQueryFilter = (req, res, next) => {
     let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query
@@ -53,6 +54,9 @@ const spotQueryFilter = (req, res, next) => {
     next()
 }
 
+//------------------------------------------------------------------spotChecker----------------------------------------------
+
+
 const spotChecker = (req, res, next) => {
     const {
         ownerId,
@@ -88,7 +92,7 @@ const spotChecker = (req, res, next) => {
     next();
 };
 
-// validating Reviews
+//------------------------------------------------------------------validating Reviews----------------------------------------------
 
 const reviewValidator = (req, res, next) => {
     const { review, stars } = req.body;
@@ -106,7 +110,8 @@ const reviewValidator = (req, res, next) => {
     next()
 }
 
-// Getting All Spots
+//------------------------------------------------------------------Get All Spots----------------------------------------------
+
 router.get('/', spotQueryFilter, async (req, res) => {
 
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
@@ -175,7 +180,7 @@ router.get('/', spotQueryFilter, async (req, res) => {
     res.json(response)
 })
 
-// Get Spot of a Current User
+//------------------------------------------------------------------Get Current User Spots----------------------------------------------
 
 router.get('/current', requireAuth, async (req, res) => {
 
@@ -209,7 +214,9 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json({ Spots: userSpots });
 });
 
-// Create a Spot
+
+//------------------------------------------------------------------Create New Spot----------------------------------------------
+
 router.post('/', requireAuth, spotChecker, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
@@ -229,7 +236,7 @@ router.post('/', requireAuth, spotChecker, async (req, res) => {
     res.json(newSpot)
 })
 
-// Create Image for Spot
+//------------------------------------------------------------------Create Image for a Spot ----------------------------------------------
 
 router.post('/:spotId/images', requireAuth, async (req, res) => {
     const spot = await Spot.findByPk(req.params.spotId);
@@ -260,7 +267,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     });
 });
 
-// Getting Spot Details based on Spot Id
+//------------------------------------------------------------------Get Spot Details Based on Spot ID----------------------------------------------
 
 router.get('/:spotId', async (req, res) => {
     const spot = await Spot.findByPk(req.params.spotId, {
@@ -299,7 +306,7 @@ router.get('/:spotId', async (req, res) => {
 })
 
 
-// Creating a new Review
+//------------------------------------------------------------------Creating a New Review based on Spot Id----------------------------------------------
 
 router.post('/:spotId/reviews', requireAuth, reviewValidator, async (req, res) => {
     const spot = await Spot.findByPk(req.params.spotId);
@@ -334,7 +341,11 @@ router.post('/:spotId/reviews', requireAuth, reviewValidator, async (req, res) =
     res.json(newReview)
 })
 
-// Edit Spot
+//------------------------------------------------------------------Get All Reviews of Current User----------------------------------------------
+
+
+
+//------------------------------------------------------------------Edit A Spot ----------------------------------------------
 
 router.put('/:spotId', requireAuth, spotChecker, async (req, res) => {
     let spot = await Spot.findByPk(req.params.spotId);
@@ -368,7 +379,7 @@ router.put('/:spotId', requireAuth, spotChecker, async (req, res) => {
     res.json(editSpot);
 })
 
-//Delete Spot
+//------------------------------------------------------------------Delete A Spot ----------------------------------------------
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
     let spot = await Spot.findByPk(req.params.spotId);

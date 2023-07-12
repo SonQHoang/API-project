@@ -121,7 +121,7 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json(response)
 })
 
-// Editing Reviews
+//------------------------------------------------------------------Editing a Review----------------------------------------------
 
 router.put("/:reviewId", requireAuth, reviewValidator, async (req, res) => {
     let review = await Review.findByPk(req.params.reviewId)
@@ -147,7 +147,7 @@ router.put("/:reviewId", requireAuth, reviewValidator, async (req, res) => {
     res.json(reviewToEdit)
 })
 
-// Deleting Reviews
+//------------------------------------------------------------------Deleting a Review Image----------------------------------------------
 
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     let reviewToDelete = await Review.findByPk(req.params.reviewId);

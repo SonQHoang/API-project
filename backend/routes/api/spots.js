@@ -316,7 +316,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, res) => {
     let prospectiveSpot = await Spot.findByPk(req.params.spotId);
 
-    // if the spot isnt' there, throw an error
+    // if the spot isn't there, throw an error
 
     if (!prospectiveSpot) {
         res.status(400);
@@ -335,23 +335,38 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
     }
 
     // conflicting booking reservations
-    let errors = {}
+
+    const bookingStartDate = new Date(req.body.startDate);
+    const bookingEndDate = new Date(req.body.endDate)
 
     const existingBooking = await Booking.findOne({
         where: {
-            startDate: { [Op.lte]: req.body.endDate },
-            endDate: { [Op.gte]: req.body.startDate }
+            spotId: req.params.spotId,
+            [Op.or]: [
+                {
+                    startDate: { [Op.between]: [bookingStartDate, bookingEndDate] },
+                },
+                {
+                    endDate: { [Op.between]: [bookingStartDate, bookingEndDate] }
+                }
+            ]
         }
     })
 
     if (existingBooking) {
-        errors.startDate = "Start date conflicts with an existing booking";
-            errors.endDate = "End date conflicts with an exiting booking";
-    }
+        const errors = {}
 
-    if (Object.keys(errors).length > 0) {
+        if(existingBooking.startDate >= bookingStartDate) {
+            errors.startDate = "Start date conflicts with an existing booking"
+        }
+
+        if(existingBooking.endDate <= bookingEndDate) {
+            errors.endDate = "End date conflicts with an existing booking"
+        }
+        
         res.status(403)
         res.json({
+            message: "Sorry, this spot is already booked for the specified dates",
             errors: errors
         })
     } else {
@@ -359,8 +374,8 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
         let bookingSpot = await Booking.create({
             userId: req.user.id,
             spotId: req.params.spotId,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate
+            startDate: bookingStartDate,
+            endDate: bookingEndDate
         })
         res.json(bookingSpot)
     }

@@ -123,11 +123,41 @@ router.get('/current', requireAuth, async (req, res) => {
 // Editing Reviews
 
 router.put("/:reviewId", requireAuth, reviewValidator, async (req, res) => {
+    const reviewToEdit = await Review.findByPk(req.params.reviewId)
 
+    if(!reviewToEdit) {
+        res.status(404)
+        return res.json({
+            message: `Review couldn't be found`
+        })
+    }
 })
 
 // Deleting Reviews
 
-router.delete('/:reviewId', requireAuth, async (req, res, next) => {})
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
+    let reviewToDelete = await Review.findByPk(req.params.reviewId);
+
+    if(!reviewToDelete) {
+        res.status(404)
+        return res.json({
+            message: "Review couldn't be found"
+        })
+    }
+
+    if(reviewToDelete.userId !== req.user.id) {
+        res.status(403)
+        res.json({
+            message: "Review must belong to the current use"
+        })
+
+    }
+
+    await reviewToDelete.destroy()
+    res.json({
+        message: `Successfully deleted`
+    })
+
+})
 
 module.exports = router;

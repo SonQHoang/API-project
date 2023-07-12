@@ -53,7 +53,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     res.json({
         id: newReviewImage.id,
         url: newReviewImage.url
-    })
+    }) 
 })
 
 // Getting all User Reviews
@@ -91,6 +91,6 @@ router.put("/:reviewId", requireAuth, createReviewChecker, async (req, res) => {
 // Deleting Reviews
 
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {
-    
+
 })
 module.exports = router;

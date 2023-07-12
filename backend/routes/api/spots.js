@@ -110,6 +110,26 @@ const reviewValidator = (req, res, next) => {
     next()
 }
 
+//------------------------------------------------------------------Validating Booking Dates----------------------------------------------
+
+const properBookingDates = (req, res, next) => {
+    const { startDate, endDate } = req.body;
+
+    const errors = {}
+
+    if(startDate >= endDate) {
+        errors.endDate = "endDate cannot be on or before startDate"
+    }
+
+    if(Object.keys(errors).length >0) {
+        res.status(400);
+        res.json({
+            message: "Bad Request",
+            errors: errors
+        })
+    }
+    next()
+}
 //------------------------------------------------------------------Get All Spots----------------------------------------------
 
 router.get('/', spotQueryFilter, async (req, res) => {
@@ -290,6 +310,61 @@ router.get('/:spotId/reviews', async (req, res) => {
     res.json({
         Reviews: reviews
     })
+})
+//-------------------------------------------------------------------Booking Based on Spot Id----------------------------------------------
+
+router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, res) => {
+    let prospectiveSpot = await Spot.findByPk(req.params.spotId);
+
+    // if the spot isnt' there, throw an error
+
+    if(!prospectiveSpot) {
+        res.status(400);
+        res.json({
+            message: `Spot couldn't be found`
+        })
+    }
+
+    // Owner of Spot cannot book that spot
+
+    if(prospectiveSpot.ownerId === req.user.id) {
+        res.status(403)
+        res.json({
+            message: 'Spot must NOT belong to the current user'
+        })
+    }
+
+
+    // No errors means that you can book the spot
+    let bookingSpot = await Booking.create({
+        userId: req.user.id,
+        spotId: req.params.spotId,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate
+    })
+    res.json(bookingSpot)
+
+    // conflicting booking reservations
+    let errors = {}
+
+    const existingBooking = await Booking.findOne({
+        where: {
+            startDate: { [Op.lte]: req.body.endDate},
+            endDate: { [Op.gte]: req.body.startDate}
+        }
+    })
+
+    if(existingBooking) {
+        errors.startDate = "Start date conflicts with an existing booking",
+        errors.endDate = "End date conflicts with an exiting booking"
+    }
+
+    if(Object.keys.errors.length > 0) {
+        res.status(403)
+        res.json({
+            errors: errors
+        })
+    }
 })
 
 //------------------------------------------------------------------Get Spot Details Based on Spot ID----------------------------------------------

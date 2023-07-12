@@ -19,27 +19,27 @@ const spotQueryFilter = (req, res, next) => {
     let errors = {}
 
     // error checking for page and size
-    if (page || page < 1) errors.page = "Page must be greater than or equal to 1";
-    if (page || page < 1) errors.size = "Size must be greater than or equal to 1";
+    if (page < 1) errors.page = "Page must be greater than or equal to 1";
+    if (size < 1) errors.size = "Size must be greater than or equal to 1";
 
     // error checking for min 
     // is there a specific value for min / lat? I'm guessing outside of the range given from the API documentation
     // Confirmed with Jojo there's no specific range, going to go with my ball park values
 
     // Error checking for latitude and longitude ranges
-    if (minLat && (minLat < -50 || minLat > 50))
+    if (minLat < -50)
         errors.minLat = "Minimum latitude is invalid";
-    if (maxLat && (maxLat < -50 || maxLat > 50))
+    if (maxLat > 50)
         errors.maxLat = "Maximum latitude is invalid";
-    if (minLng && (minLng < -150 || minLng > 150))
+    if (minLng < -150)
         errors.minLng = "Minimum longitude is invalid";
-    if (maxLng && (maxLng < -150 || maxLng > 150))
+    if (maxLng > 150)
         errors.maxLng = "Maximum longitude is invalid";
 
     // Error checking for price range
-    if (minPrice && minPrice < 0)
+    if (minPrice < 0)
         errors.minPrice = "Minimum price must be greater than or equal to 0";
-    if (maxPrice && maxPrice < 0)
+    if (maxPrice < 0)
         errors.maxPrice = "Maximum price must be greater than or equal to 0";
 
     // Any length inside of our error object means there's an error
@@ -118,7 +118,7 @@ router.get('/', spotQueryFilter, async (req, res) => {
 
     const where = {};
     if (minPrice && maxPrice) where.price = { [Op.between]: [minPrice, maxPrice] };
-    if (maxLat && minLat) where.lat = { [Op.between]: [minLat, maxLat] };
+    if (minLat && maxLat) where.lat = { [Op.between]: [minLat, maxLat] };
     if (minLng && maxLng) where.lng = { [Op.between]: [minLng, maxLng] };
 
 
@@ -127,50 +127,50 @@ router.get('/', spotQueryFilter, async (req, res) => {
         where,
         limit: size,
         offset: size * (page - 1),
-      });
+    });
 
-      let spotRating = spots.map((spot) => {
-          let jsonSpot = spot.toJSON();
-          
-          let totalRating = 0;
-          let reviews = jsonSpot.Reviews;
+    let spotRating = spots.map((spot) => {
+        let jsonSpot = spot.toJSON();
 
-          reviews.forEach((review) => {
+        let totalRating = 0;
+        let reviews = jsonSpot.Reviews;
+
+        reviews.forEach((review) => {
             totalRating += review.stars;
-          })
-        
+        })
+
         const avgRating = totalRating / reviews.length
         jsonSpot.avgRating = avgRating;
-      
+
         if (jsonSpot.SpotImages.length) {
             jsonSpot.previewImage = jsonSpot.SpotImages[0].url;
-          }
+        }
 
         delete jsonSpot.SpotImages;
         delete jsonSpot.Reviews;
-      
+
         return jsonSpot;
-      });
-    
-      // preview Images isn't coming up... going to work on other end points for now
-      let response = {
+    });
+
+    let response = {
         Spots: spotRating.map((spot) => ({
-          id: spot.id,
-          ownerId: spot.ownerId,
-          address: spot.address,
-          city: spot.city,
-          state: spot.state,
-          country: spot.country,
-          lat: spot.lat,
-          lng: spot.lng,
-          name: spot.name,
-          description: spot.description,
-          price: spot.price,
-          createdAt: spot.createdAt,
-          updatedAt: spot.updatedAt,
-          avgRating: spot.avgRating,
-          previewImage: spot.previewImage,
+            id: spot.id,
+            ownerId: spot.ownerId,
+            address: spot.address,
+            city: spot.city,
+            state: spot.state,
+            country: spot.country,
+            lat: spot.lat,
+            lng: spot.lng,
+            name: spot.name,
+            description: spot.description,
+            price: spot.price,
+            createdAt: spot.createdAt,
+            updatedAt: spot.updatedAt,
+            avgRating: spot.avgRating,
+            previewImage: spot.previewImage,
         })),
+        page, size
     }
     res.json(response)
 })
@@ -178,7 +178,7 @@ router.get('/', spotQueryFilter, async (req, res) => {
 // Get Spot of a Current User
 
 router.get('/current', requireAuth, async (req, res) => {
-    
+
     const userId = req.user.id
     let spots = await Spot.findAll({
         include: [
@@ -195,19 +195,19 @@ router.get('/current', requireAuth, async (req, res) => {
 
         reviews.forEach((review) => {
             totalRating += review.stars;
-          });
-          const avgRating = (totalRating / reviews.length).toFixed(2);
-          spotJson.avgRating = avgRating;
-          if (spotJson.SpotImages.length) {
-            spotJson.previewImage = spotJson.SpotImages[0].url;
-          }
-          delete spotJson.Reviews;
-          delete spotJson.SpotImages;
-      
-          return spotJson;
         });
-        res.json({ Spots: userSpots });
-      });
+        const avgRating = (totalRating / reviews.length).toFixed(2);
+        spotJson.avgRating = avgRating;
+        if (spotJson.SpotImages.length) {
+            spotJson.previewImage = spotJson.SpotImages[0].url;
+        }
+        delete spotJson.Reviews;
+        delete spotJson.SpotImages;
+
+        return spotJson;
+    });
+    res.json({ Spots: userSpots });
+});
 
 // Create a Spot
 router.post('/', requireAuth, spotChecker, async (req, res) => {
@@ -268,12 +268,12 @@ router.get('/:spotId', async (req, res) => {
             { model: Review },
             {
                 model: SpotImage,
-                attributes: [ "id", 'url', "preview"]
+                attributes: ["id", 'url', "preview"]
             },
             {
                 model: User,
                 as: "Owner",
-                attributes: [ "id", 'firstName', "lastName"]
+                attributes: ["id", 'firstName', "lastName"]
             }
         ]
     })
@@ -317,7 +317,7 @@ router.post('/:spotId/reviews', requireAuth, reviewValidator, async (req, res) =
         }
     })
 
-    if(findingExistingReview) {
+    if (findingExistingReview) {
         res.status(500)
         return res.json({
             message: "User already has a review for this spot"

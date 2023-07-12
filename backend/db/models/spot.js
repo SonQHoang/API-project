@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     lat: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
         isNumeric: true,

@@ -270,7 +270,26 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 //------------------------------------------------------------------Get Reviews Based on Spot Id ----------------------------------------------
 
 router.get('/:spotId/reviews', async (req, res) => {
-    
+    const reviews = await Review.findAll({
+        where: {
+            spotId: req.params.spotId
+        },
+        include: [
+            { model: User, attributes: ["id", "firstName", "lastName"] },
+            { model: ReviewImage, attributes: ["id", 'url']}
+        ]
+    })
+
+    let specificSpot = await Spot.findByPk(req.params.spotId)
+    if(!specificSpot) {
+        res.status(404),
+        res.json({
+            message: `Spot couldn't be found`
+        })
+    }
+    res.json({
+        Reviews: reviews
+    })
 })
 
 //------------------------------------------------------------------Get Spot Details Based on Spot ID----------------------------------------------

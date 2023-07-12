@@ -15,7 +15,7 @@ const reviewValidator = (req, res, next) => {
     if (!review) {
         errors.review = "Review text is required"
     }
-    if (NaN(stars) || stars > 5 || stars < 1) {
+    if (stars > 5 || stars < 1) {
         errors.stars = "Stars must be an integer from 1 to 5"
     }
 
@@ -25,6 +25,7 @@ const reviewValidator = (req, res, next) => {
             errors: errors
         })
     }
+    next()
 }
 
 //------------------------------------------------------------------Adding Image Based on Review Id----------------------------------------------
@@ -123,11 +124,54 @@ router.get('/current', requireAuth, async (req, res) => {
 // Editing Reviews
 
 router.put("/:reviewId", requireAuth, reviewValidator, async (req, res) => {
+    let review = await Review.findByPk(req.params.reviewId)
 
+    if(!review) {
+        res.status(404)
+        return res.json({
+            message: `Review couldn't be found`
+        })
+    }
+
+    if (review.userId !== req.user.id) {
+        res.status(403)
+        res.json({
+            message: "Review must belong to current user"
+        })
+    }
+
+    const reviewToEdit = await review.update({
+        review: req.body.review,
+        stars: req.body.stars
+    })
+    res.json(reviewToEdit)
 })
 
 // Deleting Reviews
 
-router.delete('/:reviewId', requireAuth, async (req, res, next) => {})
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
+    let reviewToDelete = await Review.findByPk(req.params.reviewId);
+
+    if(!reviewToDelete) {
+        res.status(404)
+        return res.json({
+            message: "Review couldn't be found"
+        })
+    }
+
+    if(reviewToDelete.userId !== req.user.id) {
+        res.status(403)
+        res.json({
+            message: "Review must belong to the current use"
+        })
+
+    }
+
+    await reviewToDelete.destroy()
+    res.json({
+        message: `Successfully deleted`
+    })
+
+})
 
 module.exports = router;

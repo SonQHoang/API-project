@@ -9,7 +9,7 @@ const { Spot, User, Booking, SpotImage, Review, ReviewImage } = require('../../d
 const router = express.Router()
 
 
-const spotValidator = (req, res, next) => {
+const spotQueryFilter = (req, res, next) => {
     let { page, size, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query
 
 
@@ -107,7 +107,7 @@ const reviewValidator = (req, res, next) => {
 }
 
 // Getting All Spots
-router.get('/', spotValidator, async (req, res) => {
+router.get('/', spotQueryFilter, async (req, res) => {
 
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
 
@@ -174,6 +174,40 @@ router.get('/', spotValidator, async (req, res) => {
     }
     res.json(response)
 })
+
+// Get Spot of a Current User
+
+router.get('/current', requireAuth, async (req, res) => {
+    
+    const userId = req.user.id
+    let spots = await Spot.findAll({
+        include: [
+            { model: Review }, { model: SpotImage, attributes: ["url"] }
+        ],
+        where: { ownerId: userId }
+    })
+
+    let userSpots = spots.map((spot) => {
+        let spotJson = spot.toJSON();
+
+        let totalRating = 0;
+        let reviews = spotJson.Reviews;
+
+        reviews.forEach((review) => {
+            totalRating += review.stars;
+          });
+          const avgRating = (totalRating / reviews.length).toFixed(2);
+          spotJson.avgRating = avgRating;
+          if (spotJson.SpotImages.length) {
+            spotJson.previewImage = spotJson.SpotImages[0].url;
+          }
+          delete spotJson.Reviews;
+          delete spotJson.SpotImages;
+      
+          return spotJson;
+        });
+        res.json({ Spots: userSpots });
+      });
 
 // Create a Spot
 router.post('/', requireAuth, spotChecker, async (req, res) => {
@@ -264,39 +298,6 @@ router.get('/:spotId', async (req, res) => {
     res.json(jsonSpot)
 })
 
-// Get Spot of a Current User
-
-router.get('/current', requireAuth, async (req, res) => {
-    
-    const userId = req.user.id
-    let spots = await Spot.findAll({
-        include: [
-            { model: Review }, { model: SpotImage, attributes: ["url"] }
-        ],
-        where: { ownerId: userId }
-    })
-
-    let userSpots = spots.map((spot) => {
-        let spotJson = spot.toJSON();
-
-        let totalRating = 0;
-        let reviews = spotJson.Reviews;
-
-        reviews.forEach((review) => {
-            totalRating += review.stars;
-          });
-          const avgRating = (totalRating / reviews.length).toFixed(2);
-          spotJson.avgRating = avgRating;
-          if (spotJson.SpotImages.length) {
-            spotJson.previewImage = spotJson.SpotImages[0].url;
-          }
-          delete spotJson.Reviews;
-          delete spotJson.SpotImages;
-      
-          return spotJson;
-        });
-        res.json({ Spots: userSpots });
-      });
 
 // Creating a new Review
 

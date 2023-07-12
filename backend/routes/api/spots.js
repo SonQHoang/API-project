@@ -231,24 +231,24 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 router.get('/:spotId', async (req, res) => {
     const spot = await Spot.findByPk(req.params.spotId, {
         include: [
-            {
-                model: Review
-            },
+            { model: Review },
             {
                 model: SpotImage,
-                attributes: [
-                    "id", 'url', "preview"
-                ]
+                attributes: [ "id", 'url', "preview"]
             },
             {
                 model: User,
                 as: "Owner",
-                attributes: [
-                    "id", 'firstName', "lastName"
-                ]
+                attributes: [ "id", 'firstName', "lastName"]
             }
         ]
     })
+    if (!spot) {
+        res.status(404);
+        return res.json({
+            message: `Spot couldn't be found`
+        })
+    }
 })
 
 // Get Spot of a Current User

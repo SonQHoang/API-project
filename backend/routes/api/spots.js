@@ -269,6 +269,9 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
 
 //------------------------------------------------------------------Get Reviews Based on Spot Id ----------------------------------------------
 
+router.get('/:spotId/reviews', async (req, res) => {
+    
+})
 
 //------------------------------------------------------------------Get Spot Details Based on Spot ID----------------------------------------------
 

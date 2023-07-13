@@ -311,7 +311,48 @@ router.get('/:spotId/reviews', async (req, res) => {
         Reviews: reviews
     })
 })
-//-------------------------------------------------------------------Booking Based on Spot Id----------------------------------------------
+
+//-------------------------------------------------------------------Get All Bookings Based on Spot Id----------------------------------------------
+
+// api docs says this requires Auth? Does it?
+
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    if(!req.user) {
+        res.status(401);
+        return res.json({
+            message: "Authentication required"
+        })
+    }
+    const spot = await Spot.findByPk(req.params.spotId)
+    if(!spot) {
+        res.status(404);
+        return res.json({
+            message: `Spot couldn't be found`
+        })
+    }
+    let spotOwner = req.user.id == spot.ownerId
+
+    if(spotOwner) {
+        // What you'll see if you're the owner of the spot
+        let ownerBooking = await Booking.findAll({
+            where: { spotId: req.params.spotId},
+            include: [{ model: User, attributes: ['id', 'firstName', 'lastName']}]
+        })
+        return res.json({
+            Bookings: ownerBooking
+        })
+        // What you'll see if you are booking, but not the owner
+    } else {
+        let customerBooking = await Booking.findAll({
+            where: { spotId: req.params.spotId},
+            attributes: ["spotId", 'startDate', 'endDate']
+        })
+        return res.json({
+            Bookings: customerBooking
+        })
+    }
+})
+//------------------------------------------------------------------Create Booking Based on Spot Id----------------------------------------------
 
 router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, res) => {
     let prospectiveSpot = await Spot.findByPk(req.params.spotId);
@@ -334,8 +375,7 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
         })
     }
 
-    // conflicting booking reservations
-
+    // Dealing with conflicting reservations
     const bookingStartDate = new Date(req.body.startDate);
     const bookingEndDate = new Date(req.body.endDate)
 
@@ -344,10 +384,16 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
             spotId: req.params.spotId,
             [Op.or]: [
                 {
-                    startDate: { [Op.between]: [bookingStartDate, bookingEndDate] },
+                    startDate: { [Op.lte]: [bookingEndDate] },
+                    endDate: { [Op.gte]: bookingStartDate},
                 },
                 {
-                    endDate: { [Op.between]: [bookingStartDate, bookingEndDate] }
+                    startDate: { [Op.lte]: [bookingEndDate] },
+                    endDate: { [Op.gte]: bookingEndDate},
+                },
+                {
+                    startDate: { [Op.lt]: [bookingStartDate] },
+                    endDate: { [Op.gte]: bookingEndDate},  
                 }
             ]
         }
@@ -356,14 +402,14 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
     if (existingBooking) {
         const errors = {}
 
-        if(existingBooking.startDate >= bookingStartDate) {
+        if(existingBooking.startDate <= bookingStartDate) {
             errors.startDate = "Start date conflicts with an existing booking"
         }
 
-        if(existingBooking.endDate <= bookingEndDate) {
+        if(existingBooking.endDate >= bookingEndDate) {
             errors.endDate = "End date conflicts with an existing booking"
         }
-        
+
         res.status(403)
         res.json({
             message: "Sorry, this spot is already booked for the specified dates",

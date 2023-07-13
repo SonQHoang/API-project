@@ -32,6 +32,13 @@ const bookingValidator = (req, res, next) => {
 //------------------------------------------------------------------Get All Current User's Bookings----------------------------------------------
 
 router.get('/current', requireAuth, async (req, res) => {
+
+    if(!req.user) {
+        res.status(401);
+        return res.json({
+            message: "Authentication required"
+        })
+    }
     const bookings = await Booking.findAll({
         where: { userId: req.user.id },
         include: [{
@@ -73,7 +80,16 @@ router.get('/current', requireAuth, async (req, res) => {
 //------------------------------------------------------------------Edit a Booking--------------------------------------------------------
 
 router.put("/:bookingId", requireAuth, bookingValidator, async (req, res, next) => {
+    
+    if(!req.user) {
+        res.status(401);
+        return res.json({
+            message: "Authentication required"
+        })
+    }
+    
     const { startDate, endDate } = req.body;
+    
     let booking = await Booking.findByPk(req.params.bookingId);
 
     if (!booking) {
@@ -151,6 +167,14 @@ router.put("/:bookingId", requireAuth, bookingValidator, async (req, res, next) 
 
 //------------------------------------------------------------------Delete a Booking------------------------------------------------------
 router.delete("/:bookingId", requireAuth, async (req, res, next) => {
+
+    if(!req.user) {
+        res.status(401);
+        return res.json({
+            message: "Authentication required"
+        })
+    }
+
     let bookingToDelete = await Booking.findByPk(req.params.bookingId);
 
     if (!req.user) {

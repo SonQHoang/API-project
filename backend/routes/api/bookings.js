@@ -54,8 +54,9 @@ router.get('/current', requireAuth, async (req, res) => {
 
 
 //------------------------------------------------------------------Delete a Booking------------------------------------------------------
+// add validator tomorrow 
 
-router.delete('/:bookingId'), validateBookingDeletion, async (req, res, next) => {
+router.delete('/:bookingId'), async (req, res, next) => {
     if(!req.user) {
         res.status(401);
         return res.json({

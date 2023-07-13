@@ -51,11 +51,13 @@ router.get('/current', requireAuth, async (req, res) => {
 
 //------------------------------------------------------------------Edit a Booking--------------------------------------------------------
 
+router.post("/:bookingId")
 
 
 //------------------------------------------------------------------Delete a Booking------------------------------------------------------
+router.delete("/:bookingId", requireAuth, async (req, res, next) => {
+    let bookingToDelete = await Booking.findByPk(req.params.bookingId);
 
-router.delete('/:bookingId'), validateBookingDeletion, async (req, res, next) => {
     if(!req.user) {
         res.status(401);
         return res.json({
@@ -63,7 +65,6 @@ router.delete('/:bookingId'), validateBookingDeletion, async (req, res, next) =>
         })
     }
 
-    const bookingToDelete = await Booking.findByPk(req.params.bookingId);
     if(!bookingToDelete) {
         res.status(404);
         return res.json({
@@ -71,11 +72,30 @@ router.delete('/:bookingId'), validateBookingDeletion, async (req, res, next) =>
         })
     }
 
-    await bookingToDelete.destroy();
+    let spot = await Spot.findByPk(bookingToDelete.spotId);
+    if(bookingToDelete.userId !== req.user.id && spot.ownerId !== req.user.id) {
+        res.status(403);
+        res.json({
+            message: `Booking must belong to the current user or the Spot must belong to the current user`
+        })
+    }
+
+    const currentBookingTime = new Date(bookingToDelete.startDate).getTime();
+    const currentTime = Date.now();
+    // console.log(currentTime)
+
+    if(currentBookingTime <= currentTime) {
+        res.status(403);
+        return res.json({
+            message: `Bookings that have been started can't be deleted`
+        })
+    }
+
+    await bookingToDelete.destroy()
     res.json({
         message: "Successfully deleted"
     })
+})
 
-    // add other requirements tomorrow
-}
+
 module.exports = router;

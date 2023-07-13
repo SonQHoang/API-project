@@ -423,10 +423,16 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
             startDate: bookingStartDate,
             endDate: bookingEndDate
         })
-        res.json(bookingSpot)
+        res.json({
+            id: bookingSpot.id,
+            spotId: bookingSpot.spotId,
+            userId: bookingSpot.userId,
+            startDate: bookingSpot.startDate,
+            endDate: bookingSpot.endDate,
+            createdAt: bookingSpot.createdAt,
+            updatedAt: bookingSpot.updatedAt
+        })
     }
-
-
 })
 
 //------------------------------------------------------------------Get Spot Details Based on Spot ID----------------------------------------------

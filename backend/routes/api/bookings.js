@@ -48,4 +48,34 @@ router.get('/current', requireAuth, async (req, res) => {
         Bookings: bookingsSpotImages
     })
 })
+
+//------------------------------------------------------------------Edit a Booking--------------------------------------------------------
+
+
+
+//------------------------------------------------------------------Delete a Booking------------------------------------------------------
+
+router.delete('/:bookingId'), validateBookingDeletion, async (req, res, next) => {
+    if(!req.user) {
+        res.status(401);
+        return res.json({
+            message: "Authentication required"
+        })
+    }
+
+    const bookingToDelete = await Booking.findByPk(req.params.bookingId);
+    if(!bookingToDelete) {
+        res.status(404);
+        return res.json({
+            message: `Booking couldn't be found`
+        })
+    }
+
+    await bookingToDelete.destroy();
+    res.json({
+        message: "Successfully deleted"
+    })
+
+    // add other requirements tomorrow
+}
 module.exports = router;

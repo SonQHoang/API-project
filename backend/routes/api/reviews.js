@@ -28,35 +28,6 @@ const reviewValidator = (req, res, next) => {
     next()
 }
 
-//------------------------------------------------------------------Adding Image Based on Review Id----------------------------------------------
-
-router.post('/:reviewId/images', requireAuth, async (req, res) => {
-    const review = await Review.findByPk(req.params.reviewId);
-
-    // if review doesn't exist throw error
-    if (!review) {
-        res.status(404);
-        res.json({ message: "Review couldn't be found" })
-    }
-    if (review.userId !== req.user.id) {
-        return res.status(403).json({ message: "Review must belong to the current user" })
-    }
-    let totalImagesFromReview = await ReviewImage.count({
-        where: { reviewId: req.params.reviewId }
-    })
-    if (totalImagesFromReview >= 10) {
-        return res.status(403).json({ message: "Maximum number of images for this resource was reached" })
-    }
-    const newReviewImage = await ReviewImage.create({
-        reviewId: req.params.reviewId,
-        url: req.body.url
-    })
-    res.json({
-        id: newReviewImage.id,
-        url: newReviewImage.url
-    })
-})
-
 //------------------------------------------------------------------Get All Reviews of Current User----------------------------------------------
 
 router.get('/current', requireAuth, async (req, res) => {
@@ -119,6 +90,35 @@ router.get('/current', requireAuth, async (req, res) => {
         }))
     }
     res.json(response)
+})
+
+//------------------------------------------------------------------Adding Image Based on Review Id----------------------------------------------
+
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
+    const review = await Review.findByPk(req.params.reviewId);
+
+    // if review doesn't exist throw error
+    if (!review) {
+        res.status(404);
+        res.json({ message: "Review couldn't be found" })
+    }
+    if (review.userId !== req.user.id) {
+        return res.status(403).json({ message: "Review must belong to the current user" })
+    }
+    let totalImagesFromReview = await ReviewImage.count({
+        where: { reviewId: req.params.reviewId }
+    })
+    if (totalImagesFromReview >= 10) {
+        return res.status(403).json({ message: "Maximum number of images for this resource was reached" })
+    }
+    const newReviewImage = await ReviewImage.create({
+        reviewId: req.params.reviewId,
+        url: req.body.url
+    })
+    res.json({
+        id: newReviewImage.id,
+        url: newReviewImage.url
+    })
 })
 
 //------------------------------------------------------------------Editing a Review----------------------------------------------

@@ -21,6 +21,18 @@ module.exports = {
         reviewId: 3,
         url: "www.crazy.com",
       },
+      {
+        reviewId: 4,
+        url: "www.amazing.com",
+      },
+      {
+        reviewId: 5,
+        url: "www.wow.com",
+      },
+      {
+        reviewId: 6,
+        url: "www.crazy.com",
+      },
     ], {})
   },
 
@@ -28,7 +40,7 @@ module.exports = {
     options.tableName = 'ReviewImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      reviewId: { [Op.in]: [1,2,3] }
+      reviewId: { [Op.in]: [1,2,3,4,5,6] }
     }, {});
   }
 };

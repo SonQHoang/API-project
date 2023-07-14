@@ -481,6 +481,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 //------------------------------------------------------------------Create Booking Based on Spot Id----------------------------------------------
 
 router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, res) => {
+    const { startDate, endDate } = req.body
     let prospectiveSpot = await Spot.findByPk(req.params.spotId);
 
     // if the spot isn't there, throw an error
@@ -502,23 +503,23 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
     }
 
     // Dealing with conflicting reservations
-    const bookingStartDate = new Date(req.body.startDate);
-    const bookingEndDate = new Date(req.body.endDate)
+    const bookingStartDate = new Date(startDate);
+    const bookingEndDate = new Date(endDate)
 
     const existingBooking = await Booking.findOne({
         where: {
             spotId: req.params.spotId,
             [Op.or]: [
                 {
-                    startDate: { [Op.lte]: [bookingEndDate] },
+                    startDate: { [Op.lte]: bookingEndDate },
                     endDate: { [Op.gte]: bookingStartDate},
                 },
                 {
-                    startDate: { [Op.lte]: [bookingEndDate] },
+                    startDate: { [Op.lte]: bookingEndDate },
                     endDate: { [Op.gte]: bookingEndDate},
                 },
                 {
-                    startDate: { [Op.lt]: [bookingStartDate] },
+                    startDate: { [Op.lt]: bookingStartDate },
                     endDate: { [Op.gte]: bookingEndDate},  
                 }
             ]
@@ -550,13 +551,7 @@ router.post('/:spotId/bookings', requireAuth, properBookingDates, async (req, re
             endDate: bookingEndDate
         })
         res.json({
-            id: bookingSpot.id,
-            spotId: bookingSpot.spotId,
-            userId: bookingSpot.userId,
-            startDate: bookingSpot.startDate,
-            endDate: bookingSpot.endDate,
-            createdAt: bookingSpot.createdAt,
-            updatedAt: bookingSpot.updatedAt
+            Bookings: bookingSpot
         })
     }
 })

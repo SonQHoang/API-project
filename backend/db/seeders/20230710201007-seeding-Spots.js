@@ -44,6 +44,18 @@ module.exports = {
         name: "Zap Academy",
         description: "Place where web developers are created",
         price: 789
+      },
+      {
+        ownerId: 2,
+        address: "789 Disney Land",
+        city: "San Diego",
+        state: "California",
+        country: "United States of America",
+        lat: 37.7645358,
+        lng: -122.4730327,
+        name: "Clap Academy",
+        description: "Place where web developers are created",
+        price: 789
       }
     ], {})
   },
@@ -52,7 +64,7 @@ module.exports = {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['App Academy', 'Cap Academy', 'Zap Academy'] }
+      name: { [Op.in]: ['App Academy', 'Cap Academy', 'Zap Academy', 'Clap Academy'] }
     }, {});
   }
 };

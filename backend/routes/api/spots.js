@@ -206,22 +206,27 @@ router.get('/current', requireAuth, async (req, res) => {
 
     const userId = req.user.id
     let spots = await Spot.findAll({
-        include: [
-            { model: Review }, { model: SpotImage, attributes: ["url"] }
-        ],
-        where: { ownerId: userId }
+        where: { ownerId: userId },
+        include: { model: Review, attributes: ["stars"]} ,
+        include: [{ model: SpotImage, attributes: ["url"]}, {
+            model: Review, attributes: ['stars']
+        }]
     })
 
     let userSpots = spots.map((spot) => {
         let spotJson = spot.toJSON();
+        console.log('spotJson--------------->', spotJson)
 
         let totalRating = 0;
         let reviews = spotJson.Reviews;
+        console.log('Reviews--------------->', reviews)
 
-        reviews.forEach((review) => {
-            totalRating += review.stars;
+        const stars = reviews.map((review) => {
+            totalRating += parseInt(review.stars);
+            return totalRating
         });
-        const avgRating = (totalRating / reviews.length).toFixed(2);
+        console.log('Stars-------------->', stars)
+        const avgRating = stars.length > 0 ? totalRating / stars.length : null ;
         spotJson.avgRating = avgRating;
         if (spotJson.SpotImages.length) {
             spotJson.previewImage = spotJson.SpotImages[0].url;

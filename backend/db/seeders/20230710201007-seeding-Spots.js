@@ -1,7 +1,5 @@
 'use strict';
 
-const { Spot } = require('../models')
-
 let options = {};
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in options object
@@ -10,7 +8,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Spots';
-    await Spot.bulkCreate([
+    return queryInterface.bulkInsert(options,[
       {
         ownerId: 1,
         address: "123 Disney Land",
@@ -47,14 +45,14 @@ module.exports = {
         description: "Place where web developers are created",
         price: 789
       }
-    ], options)
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['App Academy', 'Cap Academy', 'Zap Academy'] }
+      name: { [Op.in]: ['App Academy', 'Cap Academy', 'Zap Academy'] }
     }, {});
   }
 };

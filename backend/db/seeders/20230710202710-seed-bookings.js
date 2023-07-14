@@ -1,7 +1,5 @@
 'use strict';
 
-const { Booking } = require('../models')
-
 let options = {};
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in options object
@@ -10,7 +8,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Bookings';
-    await Booking.bulkCreate(options,[
+    return queryInterface.bulkInsert(options,[
       {
         spotId: 1,
         userId: 1,
@@ -29,7 +27,7 @@ module.exports = {
         startDate: "2023-11-19",
         endDate: "2023-11-20"
       }
-    ])
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {

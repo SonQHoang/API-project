@@ -1,7 +1,5 @@
 'use strict';
 
-const { Review } = require('../models')
-
 let options = {};
 if (process.env.NODE_ENV === "production") {
   options.schema = process.env.SCHEMA; // define your schema in options object
@@ -10,9 +8,9 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Reviews';
-    await Review.bulkCreate(options,[
+    return queryInterface.bulkInsert(options,[
       {
-        userId: 1,
+        userId: 2,
         spotId: 1,
         review: "This was an awesome spot!",
         stars: 5
@@ -29,7 +27,7 @@ module.exports = {
         review: "This was a pretty good spot!",
         stars: 4
       },
-    ])
+    ], {})
   },
 
   async down (queryInterface, Sequelize) {

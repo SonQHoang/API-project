@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     url: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isUrl: true
+      }
     }
   }, {
     sequelize,

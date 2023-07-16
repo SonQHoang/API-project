@@ -271,8 +271,8 @@ router.get('/:spotId', async (req, res) => {
         totalRating += review.stars;
     }))
 
-    const avgRating = totalRating / reviews.length
-    jsonSpot.avgRating = avgRating
+    const avgStarRating = totalRating / reviews.length
+    jsonSpot.avgStarRating = avgStarRating
     delete jsonSpot.Reviews;
     res.json(jsonSpot)
 })

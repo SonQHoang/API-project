@@ -141,11 +141,11 @@ router.put("/:bookingId", requireAuth, bookingValidator, async (req, res, next) 
     if (existingBooking) {
         const errors = {}
 
-        if (existingBooking.startDate <= bookingStartDate) {
+        if (existingBooking.startDate < bookingStartDate) {
             errors.startDate = "Start date conflicts with an existing booking"
         }
 
-        if (existingBooking.endDate >= bookingEndDate) {
+        if (existingBooking.endDate > bookingEndDate) {
             errors.endDate = "End date conflicts with an existing booking"
         }
 

@@ -215,17 +215,17 @@ router.get('/current', requireAuth, async (req, res) => {
 
     let userSpots = spots.map((spot) => {
         let spotJson = spot.toJSON();
-        console.log('spotJson--------------->', spotJson)
+        // console.log('spotJson--------------->', spotJson)
 
         let totalRating = 0;
         let reviews = spotJson.Reviews;
-        console.log('Reviews--------------->', reviews)
+        // console.log('Reviews--------------->', reviews)
 
         const stars = reviews.map((review) => {
             totalRating += parseInt(review.stars);
             return totalRating
         });
-        console.log('Stars-------------->', stars)
+        // console.log('Stars-------------->', stars)
         const avgRating = stars.length > 0 ? totalRating / stars.length : null ;
         spotJson.avgRating = avgRating;
         if (spotJson.SpotImages.length) {

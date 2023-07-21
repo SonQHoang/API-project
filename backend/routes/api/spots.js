@@ -214,7 +214,7 @@ router.get('/current', requireAuth, async (req, res) => {
     })
 
     let userSpots = spots.map((spot) => {
-        let spotJson = spot.toJSON();
+        let spotJson = spot.toJSON(); 
         // console.log('spotJson--------------->', spotJson)
 
         let totalRating = 0;

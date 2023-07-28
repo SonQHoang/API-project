@@ -2,22 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
-import { restoreCSRF, csrfFetch } from './store/csrf';
 import './index.css';
 import App from './App';
 import configureStore from './store';
+import { restoreCSRF, csrfFetch } from './store/csrf';
 
 
 const store = configureStore();
 
-// new code
 if (process.env.NODE_ENV !== 'production') {
   restoreCSRF();
 
   window.csrfFetch = csrfFetch;
   window.store = store;
 }
-// new code
+
+if (process.env.NODE_ENV !== "production") {
+  window.store = store;
+}
 
 function Root() {
   return (

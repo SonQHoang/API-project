@@ -18,8 +18,9 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
+        console.log('This is the data we want to see', data)
+        if (data) {
+          setErrors(data);
         }
       });
   };
@@ -46,8 +47,8 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.credential && (
-          <p>{errors.credential}</p>
+        {errors.message && (
+          <p>{errors.message}</p>
         )}
         <button type="submit">Log In</button>
       </form>

@@ -279,6 +279,8 @@ router.get('/:spotId', async (req, res) => {
 
 //------------------------------------------------------------------Create a Spot----------------------------------------------
 
+
+//! Creating the new Spot in the backend
 router.post('/', requireAuth, spotChecker, async (req, res) => {
 
     const { address, city, state, country, lat, lng, name, description, price } = req.body
@@ -296,6 +298,7 @@ router.post('/', requireAuth, spotChecker, async (req, res) => {
         price
     })
     res.status(201);
+//! Sending the data back to the frontEnd
     res.json(newSpot)
 })
 

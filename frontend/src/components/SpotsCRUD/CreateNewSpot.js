@@ -63,5 +63,6 @@ const CreateSpot = () => {
       </>
   )
 };
+}
 
 export default CreateSpot

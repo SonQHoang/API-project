@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 // import { useHistory } from 'react-router-dom';
-import { getAllSpots, deleteSpot, updateSpot } from '../../store/spots';
-import { useEffect } from 'react';
+import { getAllSpots, deleteSpot } from '../../store/spots';
+import { useEffect, useState } from 'react';
+import UpdateSpotModal from '../UpdateSpotModal'
 
 
 function GetAllSpots() {
@@ -16,12 +17,18 @@ function GetAllSpots() {
         return Object.values(state.spots.allSpots)
     });
 
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [selectedSpotId, setSelectedSpotId] = useState(null)
+
     const handleDelete = (spotId) => {
+        setSelectedSpotId(spotId)
+        setShowUpdateModal(true)
         dispatch(deleteSpot(spotId))
     }
 
     const handleUpdate = (spotId) => {
-        dispatch(updateSpot(spotId))
+        setSelectedSpotId(spotId);
+        setShowUpdateModal(true)
     }
 
     return (
@@ -40,8 +47,16 @@ function GetAllSpots() {
                     </div>
                 )
             })}
+            {showUpdateModal && (
+                <UpdateSpotModal
+                    spotId={selectedSpotId}
+                    onClose={() => setShowUpdateModal(false)}
+                />
+            )}
         </>
     )
 }
 
-export default GetAllSpots;
+
+
+export default GetAllSpots

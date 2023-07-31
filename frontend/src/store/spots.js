@@ -1,7 +1,7 @@
 import { csrfFetch } from "./csrf";
 
 const CREATE_SPOT = "spots/newSpot";
-const READ_SPOT = "spots/READ_SPOT";
+const GET_ALL_SPOTS = "spots/GET_ALL_SPOTS";
 const UPDATE_SPOT = "spots/UPDATE_SPOT";
 const DELETE_SPOT = "spots/DELETE_SPOT";
 
@@ -14,9 +14,9 @@ const acCreateSpot = (spots) => {
   };
 };
 
-const acReadSpot = (spots) => {
+const acGetAllSpots = (spots) => {
   return {
-    type: READ_SPOT,
+    type: GET_ALL_SPOTS,
     spots,
   };
 };
@@ -60,16 +60,18 @@ export const createSpot = (data) => async (dispatch) => {
   }
 };
 
-export const readSpot = () => async (dispatch) => {
+export const getAllSpots = () => async (dispatch) => {
   try {
     const response = await fetch(`/api/spots`);
     if(response.ok) {
-      const spots = await response.json()
-      dispatch(acReadSpot(spots))
+      const data = await response.json()
+      // console.log('What does our data look like?', data)
+      const spots = data.Spots
+      // console.log('What does our spot data look like?',spots)
+      dispatch(acGetAllSpots(spots))
     }
   } catch (error) {
-    const errors = await error.json();
-    return errors;
+    console.error(error)
   }
 };
 
@@ -126,7 +128,7 @@ const spotReducer = (state = initialState, action) => {
         },
       };
     }
-    case READ_SPOT: {
+    case GET_ALL_SPOTS: {
       return {
         ...state,
         allSpots: action.spots

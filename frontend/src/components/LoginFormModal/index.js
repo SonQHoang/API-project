@@ -18,7 +18,7 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        console.log('This is the data we want to see', data)
+        // console.log('This is the data we want to see', data)
         if (data) {
           setErrors(data);
         }

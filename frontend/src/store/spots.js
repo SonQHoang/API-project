@@ -1,33 +1,109 @@
-import { csrfFetch } from './csrf'
+import { csrfFetch } from "./csrf";
 
 const CREATE_SPOT = "spots/newSpot";
-// const READ_SPOT = "spots/READ_SPOT";
-// const UPDATE_SPOT = "spots/UPDATE_SPOT";
-// const DELETE_SPOT = "spots/DELETE_SPOT"
+const READ_SPOT = "spots/READ_SPOT";
+const UPDATE_SPOT = "spots/UPDATE_SPOT";
+const DELETE_SPOT = "spots/DELETE_SPOT";
 
+//-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
 const acCreateSpot = (spots) => {
   return {
     type: CREATE_SPOT,
-    spots
+    spots,
   };
 };
+
+const acReadSpot = (spots) => {
+  return {
+    type: READ_SPOT,
+    spots,
+  };
+};
+
+const acUpdateSpot = (spots) => {
+  return {
+    type: UPDATE_SPOT,
+    spots,
+  };
+};
+
+const acDeleteSpot = (spots) => {
+  return {
+    type: DELETE_SPOT,
+    spots,
+  };
+};
+
+//-------------------------------------------------------------------THUNK ACTION CREATORS ---------------------------------------------------------
 //! 2 Thunk Action Creator for New Spots
 //! Going to make the fetch request to the backend to gather our data
 
 export const createSpot = (data) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  //! 5 Getting the data back, sending it up to normal action creator
-  if (response.ok) {
-    const spots = await response.json();
-    dispatch(acCreateSpot(spots));
-    return spots;
-  } else {
-    const errors = await response.json();
+  try {
+    const response = await csrfFetch(`/api/spots`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    //! 5 Getting the data back, sending it up to normal action creator
+    if (response.ok) {
+      const spots = await response.json();
+      dispatch(acCreateSpot(spots));
+      return spots;
+    } else {
+      const errors = await response.text();
+      throw new Error(`Failed to create spot: ${errors}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const readSpot = () => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/spots`);
+    if(response.ok) {
+      const spots = await response.json()
+      dispatch(acReadSpot(spots))
+    }
+  } catch (error) {
+    const errors = await error.json();
+    return errors;
+  }
+};
+
+export const updateSpot = (spots) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(spots),
+    });
+    if (response.ok) {
+      const updatedSpot = await response.json();
+      dispatch(acUpdateSpot(updatedSpot));
+      return updatedSpot;
+    } else {
+      const errors = await response.text();
+      throw new Error(`Failed to create spot: ${errors}`);
+    }
+  } catch (error) {
+    const errors = await error.json();
+    return errors;
+  }
+};
+
+export const deleteSpot = (spotId) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+      method: "DELETE",
+    });
+    if(response.ok) {
+      dispatch(acDeleteSpot(spotId))
+    }
+  }  catch (error) {
+    const errors = await error.json();
     return errors;
   }
 };
@@ -38,16 +114,47 @@ export const createSpot = (data) => async (dispatch) => {
 //! Coming from our Redux Store Shape
 const initialState = { allSpots: {}, singleSpot: {} };
 
-const newSpotReducer = (state = initialState, action) => {
+const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_SPOT: {
       return {
         //? We create a shallow copy to make sure we don't mutate our original state
-        ...state, allSpots: {[action.spots.id]: action.spots}}
+        ...state,
+        allSpots: {
+          ...state.allSpots,
+          [action.spots.id]: action.spots,
+        },
+      };
     }
+    case READ_SPOT: {
+      return {
+        ...state,
+        allSpots: action.spots
+      };
+    }
+    case UPDATE_SPOT: {
+      const updatedSpot = action.spots
+      return {
+        ...state,
+        allSpots: {
+          ...state.allSpots,
+          [updatedSpot.id]: updatedSpot
+        }
+      };
+    }
+    case DELETE_SPOT: {
+      const spotId = action.spots
+      const updatedAllSpots = { ...state.allSpots };
+      delete updatedAllSpots[spotId]
+      return {
+        ...state,
+        allSpots: updatedAllSpots
+      };
+    }
+
     default:
       return state;
   }
 };
 
-export default newSpotReducer;
+export default spotReducer;

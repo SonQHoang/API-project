@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createSpot } from '../../store/spots'
-import './spots.css';
+// import './spots.css'
 
 //! 1. Form for collecting User Data on Creating a Spot
 const CreateSpotsForm = () => {

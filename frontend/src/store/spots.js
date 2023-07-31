@@ -1,55 +1,49 @@
-const CREATE_NEW_SPOT = "spots/newSpot";
+import { csrfFetch } from './csrf'
+
+const CREATE_SPOT = "spots/newSpot";
+// const READ_SPOT = "spots/READ_SPOT";
+// const UPDATE_SPOT = "spots/UPDATE_SPOT";
+// const DELETE_SPOT = "spots/DELETE_SPOT"
 
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
-const newSpot = (spot) => {
-  console.log('this is our spot data', spot)
+const acCreateSpot = (spots) => {
   return {
-    type: CREATE_NEW_SPOT,
-    // payload here
-    payload: spot,
+    type: CREATE_SPOT,
+    spots
   };
 };
 //! 2 Thunk Action Creator for New Spots
 //! Going to make the fetch request to the backend to gather our data
 
-export const createSpot = (payload) => async (dispatch) => {
-  const options = {
+export const createSpot = (data) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  };
+    body: JSON.stringify(data),
+  });
   //! 5 Getting the data back, sending it up to normal action creator
-  const response = await fetch("api/spots/newSpot", options);
   if (response.ok) {
-    const spotData = await response.json();
-    console.log("Checking that data is what we're looking for", spotData);
-    dispatch(newSpot(spotData));
-    return spotData;
+    const spots = await response.json();
+    dispatch(acCreateSpot(spots));
+    return spots;
   } else {
-    throw new Error(`Error creating spot`);
+    const errors = await response.json();
+    return errors;
   }
 };
 
+//-----------------------------------------------Reducer-------------------------------------------------
 //! 7 Moving to Reducer FROM normal action creator
 
-const initialState = { spots: {}, singleSpot: {} };
+//! Coming from our Redux Store Shape
+const initialState = { allSpots: {}, singleSpot: {} };
 
 const newSpotReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CREATE_NEW_SPOT: {
-      //! Coming from our Redux Store Shape
-      const newSpot = action.payload;
+    case CREATE_SPOT: {
       return {
         //? We create a shallow copy to make sure we don't mutate our original state
-        ...state,
-        
-        spots: {
-          //? We're creating a shallow copy of our original (current) state.spots, which is a new ref in memory
-          ...state.spots,
-          [newSpot.id]: newSpot,
-        },
-        singleSpot: newSpot, 
-      };
+        ...state, allSpots: {[action.spots.id]: action.spots}}
     }
     default:
       return state;

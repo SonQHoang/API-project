@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { createSpot } from '../../store/spots'
+import { createSpot, updateSpot } from '../../store/spots'
 
 // Whatever we're using as a useSelector doesn't 'have the proper information when it gets rendered
 // Remember useEffect fires last
 
-const CreateSpotsForm = ({spot, buttonText}) => {
+const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -76,7 +76,25 @@ const CreateSpotsForm = ({spot, buttonText}) => {
       imageUrls
     };
 
-    dispatch(createSpot(spot));
+    const updatedSpot = {
+      address,
+      city,
+      state,
+      country,
+      name,
+      lat,
+      lng,
+      description,
+      price,
+      previewImageUrl,
+      imageUrls
+    }
+
+    if(formType === 'Update Spot') {
+      dispatch(updateSpot(updatedSpot))
+    } else {
+      dispatch(createSpot(spot));
+    }
 
     setAddress("");
     setCity("");

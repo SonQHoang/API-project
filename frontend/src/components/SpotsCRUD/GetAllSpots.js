@@ -1,9 +1,9 @@
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getAllSpots, deleteSpot } from '../../store/spots';
 import { useEffect, useState } from 'react';
-import UpdateSpotModal from '../UpdateSpotModal'
-
+// import UpdateSpotModal from '../UpdateSpotModal'
 
 function GetAllSpots() {
     const history = useHistory();
@@ -14,22 +14,25 @@ function GetAllSpots() {
     }, [dispatch])
 
     const spots = useSelector(state => {
+        console.log('This is our state =========>', state)
         return Object.values(state.spots.allSpots)
     });
+    console.log('Does this spot info change?========>', spots)
 
-    const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+    // const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedSpotId, setSelectedSpotId] = useState(null)
 
     const handleDelete = (spotId) => {
         setSelectedSpotId(spotId)
-        setShowUpdateModal(true)
+        // setShowUpdateModal(true)
         dispatch(deleteSpot(spotId))
     }
 
     const handleUpdate = (spotId) => {
         setSelectedSpotId(spotId);
         history.push(`/spots/${spotId}/update`)
-        setShowUpdateModal(true)
+        // setShowUpdateModal(true)
     }
 
     return (
@@ -44,21 +47,20 @@ function GetAllSpots() {
                         <p>{`City: ${spot.city}`}</p>
                         <p>{`State: ${spot.state}`}</p>
                         <p>{`Country: ${spot.country}`}</p>
+                        <p>{`Description: ${spot.description}`}</p>
                         <button onClick={() => handleDelete(spot.id)}>Delete</button>
                         <button onClick={() => handleUpdate(spot.id)}>Update</button>
                     </div>
                 )
             })}
-            {showUpdateModal && (
+            {/* {showUpdateModal && (
                 <UpdateSpotModal
                     spotId={selectedSpotId}
                     onClose={() => setShowUpdateModal(false)}
                 />
-            )}
+            )} */}
         </>
     )
 }
-
-
 
 export default GetAllSpots

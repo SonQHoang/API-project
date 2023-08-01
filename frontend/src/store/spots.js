@@ -9,7 +9,7 @@ const GET_SPOT_BY_ID = "spots/GET_SPOT_BY_ID"
 //-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
 const acCreateSpot = (spots) => {
-  console.log('Action payload:========>', spots);
+  // console.log('Action payload:========>', spots);
   return {
     type: CREATE_SPOT,
     spots,
@@ -39,6 +39,7 @@ const acUpdateSpot = (spots) => {
 };
 
 const acDeleteSpot = (spots) => {
+    console.log('Action payload:========>', spots);
   return {
     type: DELETE_SPOT,
     spots,

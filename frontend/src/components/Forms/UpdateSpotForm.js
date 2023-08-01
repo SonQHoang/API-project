@@ -7,6 +7,7 @@ import { getSpotById } from '../../store/spots'
 
 function UpdateSpotForm() {
     const { spotId } = useParams()
+    // console.log('SpotId from URL =============>', spotId)
     const dispatch = useDispatch();
 
     useEffect(() => {

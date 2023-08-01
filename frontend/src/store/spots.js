@@ -106,17 +106,29 @@ export const getSpotById = (spotId) => async (dispatch) => {
   }
 }
 
-export const updateSpot = (spots) => async (dispatch) => {
+export const updateSpot = (spot) => async (dispatch) => {
   try {
-    const response = await csrfFetch(`/api/spots/${spots.id}`, {
+    const response = await csrfFetch(`/api/spots/${spot.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(spots),
+      body: JSON.stringify({
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        name: spot.name,
+        lat: spot.lat,
+        lng: spot.lng,
+        description: spot.description,
+        price: spot.price,
+        previewImageUrl: spot.previewImageUrl,
+        imageUrls: spot.imageUrls,
+      }),
     });
-    console.log('What does this response look like?',response)
+    // console.log('What does this response look like?',response)
     if (response.ok) {
       const updatedSpot = await response.json();
-      console.log('What does this look like ========>', updateSpot)
+      // console.log('What does this look like ========>', updateSpot)
       dispatch(acUpdateSpot(updatedSpot));
       return updatedSpot;
     } else {
@@ -168,7 +180,7 @@ const spotReducer = (state = initialState, action) => {
       }
     }
     case GET_SPOT_BY_ID: {
-      console.log('Checking out the state', state)
+      // console.log('Checking out the state', state)
       return {
         ...state,
         singleSpot: action.spotId,

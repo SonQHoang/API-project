@@ -62,7 +62,8 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       return;
     }
 
-    const spot = {
+    const updatedSpot = {
+      ...spot,
       address,
       city,
       state,
@@ -73,28 +74,15 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       description,
       price,
       previewImageUrl,
-      imageUrls
+      imageUrls,
     };
 
-    const updatedSpot = {
-      address,
-      city,
-      state,
-      country,
-      name,
-      lat,
-      lng,
-      description,
-      price,
-      previewImageUrl,
-      imageUrls
-    }
 
-    if(formType === 'Update Spot') {
-      dispatch(updateSpot(updatedSpot))
-    } else {
-      dispatch(createSpot(spot));
-    }
+      if(formType === 'UpdateSpot') {
+        dispatch(updateSpot(updatedSpot))
+      } else {
+        dispatch(createSpot(spot));
+      }
 
     setAddress("");
     setCity("");

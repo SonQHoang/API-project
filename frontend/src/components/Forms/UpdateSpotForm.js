@@ -15,10 +15,10 @@ function UpdateSpotForm() {
     }, [dispatch, spotId])
     
     const spot = useSelector((state) => state.spots.singleSpot)
-    console.log('I should have the spot matching spotId here===>', spot)
+    // console.log('I should have the spot matching spotId here===>', spot)
 
 
-    return <CreateSpotsForm spot={spot} formType="Update Spot" buttonText="Update your Spot"/>;
+    return <CreateSpotsForm spot={spot} formType="UpdateSpot" buttonText="Update your Spot"/>;
 }
 
 export default UpdateSpotForm

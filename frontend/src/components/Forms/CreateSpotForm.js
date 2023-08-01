@@ -81,7 +81,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       if(formType === 'UpdateSpot') {
         dispatch(updateSpot(updatedSpot))
       } else {
-        dispatch(createSpot(spot));
+        dispatch(createSpot(updatedSpot));
       }
 
     setAddress("");

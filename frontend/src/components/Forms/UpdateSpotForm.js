@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getAllSpots } from '../../store/spots';
+// import { getAllSpots } from '../../store/spots';
 import { useParams } from 'react-router-dom';
 import CreateSpotsForm from './CreateSpotForm';
 import { getSpotById } from '../../store/spots'

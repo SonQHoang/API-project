@@ -4,6 +4,7 @@ const CREATE_SPOT = "spots/newSpot";
 const GET_ALL_SPOTS = "spots/GET_ALL_SPOTS";
 const UPDATE_SPOT = "spots/UPDATE_SPOT";
 const DELETE_SPOT = "spots/DELETE_SPOT";
+const GET_SPOT_BY_ID = "spots/GET_SPOT_BY_ID"
 
 //-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
@@ -18,6 +19,14 @@ const acGetAllSpots = (spots) => {
   return {
     type: GET_ALL_SPOTS,
     spots,
+  };
+};
+
+const acGetSpotById = (spotId) => {
+  console.log('Action payload:========>', spotId);
+  return {
+    type: GET_SPOT_BY_ID,
+    spotId,
   };
 };
 
@@ -75,15 +84,35 @@ export const getAllSpots = () => async (dispatch) => {
   }
 };
 
+export const getSpotById = (spotId) => async (dispatch) => {
+  try{
+    const response = await fetch(`/api/spots/${spotId}`);
+    // console.log('What does this response look like==========>', response)
+    if(response.ok) {
+      const spot = await response.json();
+      // console.log('What does this data look like==========>', data)
+      // const spot = data.spot
+      // console.log('What does this spot look like=========>', spot)
+      dispatch(acGetSpotById(spot))
+    } else {
+      throw new Error('Failed to fetch spot by ID')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const updateSpot = (spots) => async (dispatch) => {
   try {
-    const response = await csrfFetch(`/api/spots`, {
+    const response = await csrfFetch(`/api/spots/${spots.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(spots),
     });
+    console.log('What does this response look like?',response)
     if (response.ok) {
       const updatedSpot = await response.json();
+      console.log('What does this look like ========>', updateSpot)
       dispatch(acUpdateSpot(updatedSpot));
       return updatedSpot;
     } else {
@@ -132,17 +161,23 @@ const spotReducer = (state = initialState, action) => {
       return {
         ...state,
         allSpots: action.spots
+      }
+    }
+    case GET_SPOT_BY_ID: {
+      console.log('Checking out the state', state)
+      return {
+        ...state,
+        singleSpot: action.spotId,
       };
     }
     case UPDATE_SPOT: {
-      const updatedSpot = action.spots
       return {
         ...state,
         allSpots: {
           ...state.allSpots,
-          [updatedSpot.id]: updatedSpot
+          [action.spots.id]: action.spots,
         }
-      };
+      }
     }
     case DELETE_SPOT: {
       const spotId = action.spots

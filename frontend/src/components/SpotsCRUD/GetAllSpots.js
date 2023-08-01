@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { getAllSpots, deleteSpot } from '../../store/spots';
 import { useEffect, useState } from 'react';
 import UpdateSpotModal from '../UpdateSpotModal'
 
 
 function GetAllSpots() {
-    // const history = useHistory();
+    const history = useHistory();
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -28,6 +28,7 @@ function GetAllSpots() {
 
     const handleUpdate = (spotId) => {
         setSelectedSpotId(spotId);
+        history.push(`/spots/${spotId}/update`)
         setShowUpdateModal(true)
     }
 
@@ -39,6 +40,7 @@ function GetAllSpots() {
                 return (
                     <div key={spot.id}>
                         <h2>{spot.name}</h2>
+                        <p>{`Address: ${spot.address}`}</p>
                         <p>{`City: ${spot.city}`}</p>
                         <p>{`State: ${spot.state}`}</p>
                         <p>{`Country: ${spot.country}`}</p>

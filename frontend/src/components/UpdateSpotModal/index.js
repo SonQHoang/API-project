@@ -7,7 +7,8 @@ import { updateSpot } from "../../store/spots";
 function UpdateSpotModal( {spotId}) {
 
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.allSpots[spotId])
+  const spot = useSelector((state) => state.spots.singleSpot)
+//   console.log('I wanna see this spot now============>', spot)
   const { closeModal } = useModal();
 
   const [name, setName] = useState("");

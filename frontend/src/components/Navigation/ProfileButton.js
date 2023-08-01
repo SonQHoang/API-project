@@ -4,10 +4,14 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import ManageSpots from '../SpotsCRUD/manageSpots'
+import CreateSpotForm from '../Forms/CreateSpotForm'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const [showManageSpots, setShowManageSpots] = useState(false)
+  const [showCreateSpotForm, setShowCreateSpotForm] = useState(false);
   const ulRef = useRef();
 
   const openMenu = () => {
@@ -29,7 +33,10 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
-  const closeMenu = () => setShowMenu(false);
+  const closeMenu = () => {
+    setShowMenu(false);
+    setShowCreateSpotForm(false)
+  }
 
   const logout = (e) => {
     e.preventDefault();
@@ -51,6 +58,9 @@ function ProfileButton({ user }) {
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
             <li>
+              <button onClick={() => setShowManageSpots(true)}>Manage Spots</button>
+            </li>
+            <li>
               <button onClick={logout}>Log Out</button>
             </li>
           </>
@@ -69,6 +79,8 @@ function ProfileButton({ user }) {
           </>
         )}
       </ul>
+      {showManageSpots && <ManageSpots onClose={() => setShowManageSpots(false)} />}
+      {showCreateSpotForm && <CreateSpotForm onClose={() => setShowCreateSpotForm(false)} />}
     </>
   );
 }

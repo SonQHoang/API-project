@@ -39,7 +39,7 @@ const acUpdateSpot = (spots) => {
 };
 
 const acDeleteSpot = (spots) => {
-    console.log('Action payload:========>', spots);
+    // console.log('Action payload:========>', spots);
   return {
     type: DELETE_SPOT,
     spots,
@@ -197,17 +197,26 @@ const spotReducer = (state = initialState, action) => {
     }
     case DELETE_SPOT: {
       const spotId = action.spots
-      const updatedAllSpots = { ...state.allSpots };
-      delete updatedAllSpots[spotId]
+      const stateObject = {}
+      state.allSpots.forEach((spot) => {
+        stateObject[spot.id] = spot
+      })
+      console.log("stateObject ==========>", stateObject)
+      delete stateObject[spotId]
+      // console.log('Looking at spotId========>',spotId)
+      // const updatedAllSpots = { ...state.allSpots };
+      // console.log('Looking updatedAllSpots===>', updatedAllSpots)
+      // delete updatedAllSpots[spotId]
+      const stateArray = Object.values(stateObject)
       return {
         ...state,
-        allSpots: updatedAllSpots
+        allSpots: stateArray
       };
     }
-
+    
     default:
       return state;
-  }
+    }
 };
 
 export default spotReducer;

@@ -14,10 +14,10 @@ function GetAllSpots() {
     }, [dispatch])
 
     const spots = useSelector(state => {
-        // console.log('This is our state =========>', state)
+        console.log('This is our state =========>', state)
         return Object.values(state.spots.allSpots)
     });
-    // console.log('Does this spot info change?========>', spots)
+    console.log('Does this spot info change?========>', spots)
 
 
     // const [showUpdateModal, setShowUpdateModal] = useState(false);

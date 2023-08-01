@@ -3,23 +3,26 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createSpot } from '../../store/spots'
 
+// Whatever we're using as a useSelector doesn't 'have the proper information when it gets rendered
+// Remember useEffect fires last
+
 const CreateSpotsForm = ({spot, buttonText}) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
   //!9. Using useSelector for our component to listen to our changes in state
 
-  const [address, setAddress] = useState(spot.address || "");
-  const [city, setCity] = useState(spot.city || "");
-  const [state, setState] = useState(spot.state || "");
-  const [country, setCountry] = useState(spot.country || "");
-  const [name, setName] = useState(spot.name || "");
+  const [address, setAddress] = useState(spot?.address || "");
+  const [city, setCity] = useState(spot?.city || "");
+  const [state, setState] = useState(spot?.state || "");
+  const [country, setCountry] = useState(spot?.country || "");
+  const [name, setName] = useState(spot?.name || "");
   const [lat, setLat] = useState(50);
   const [lng, setLng] = useState(50);
-  const [description, setDescription] = useState(spot.description || "");
-  const [price, setPrice] = useState(spot.price || "");
-  const [previewImageUrl, setPreviewImageUrl] = useState(spot.previewImageUrl || "");
-  const [imageUrls, setImageUrls] = useState(spot.imageUrls || ["", "", "", ""])
+  const [description, setDescription] = useState(spot?.description || "");
+  const [price, setPrice] = useState(spot?.price || "");
+  const [previewImageUrl, setPreviewImageUrl] = useState(spot?.previewImageUrl || "");
+  const [imageUrls, setImageUrls] = useState(spot?.imageUrls || ["", "", "", ""])
   const [validationObject, setValidationObject] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -158,7 +161,7 @@ const CreateSpotsForm = ({spot, buttonText}) => {
         )}
         <label>
           Description
-          <input
+          <textarea
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}

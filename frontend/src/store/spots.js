@@ -9,6 +9,7 @@ const GET_SPOT_BY_ID = "spots/GET_SPOT_BY_ID"
 //-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
 const acCreateSpot = (spots) => {
+  console.log('Action payload:========>', spots);
   return {
     type: CREATE_SPOT,
     spots,
@@ -23,7 +24,7 @@ const acGetAllSpots = (spots) => {
 };
 
 const acGetSpotById = (spotId) => {
-  console.log('Action payload:========>', spotId);
+  // console.log('Action payload:========>', spotId);
   return {
     type: GET_SPOT_BY_ID,
     spotId,
@@ -49,6 +50,7 @@ const acDeleteSpot = (spots) => {
 //! Going to make the fetch request to the backend to gather our data
 
 export const createSpot = (data) => async (dispatch) => {
+  console.log('Can I even see this data?==========>', data)
   try {
     const response = await csrfFetch(`/api/spots`, {
       method: "POST",
@@ -58,6 +60,7 @@ export const createSpot = (data) => async (dispatch) => {
     //! 5 Getting the data back, sending it up to normal action creator
     if (response.ok) {
       const spots = await response.json();
+      console.log('Looking at this spot data========>', spots)
       dispatch(acCreateSpot(spots));
       return spots;
     } else {

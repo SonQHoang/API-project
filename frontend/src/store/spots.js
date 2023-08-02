@@ -39,7 +39,7 @@ const acUpdateSpot = (spots) => {
 };
 
 const acDeleteSpot = (spots) => {
-    // console.log('Action payload:========>', spots);
+  // console.log('Action payload:========>', spots);
   return {
     type: DELETE_SPOT,
     spots,
@@ -51,7 +51,6 @@ const acDeleteSpot = (spots) => {
 //! Going to make the fetch request to the backend to gather our data
 
 export const createSpot = (data) => async (dispatch) => {
-  console.log('Can I even see this data?==========>', data)
   try {
     const response = await csrfFetch(`/api/spots`, {
       method: "POST",
@@ -61,7 +60,6 @@ export const createSpot = (data) => async (dispatch) => {
     //! 5 Getting the data back, sending it up to normal action creator
     if (response.ok) {
       const spots = await response.json();
-      console.log('Looking at this spot data========>', spots)
       dispatch(acCreateSpot(spots));
       return spots;
     } else {
@@ -76,11 +74,9 @@ export const createSpot = (data) => async (dispatch) => {
 export const getAllSpots = () => async (dispatch) => {
   try {
     const response = await fetch(`/api/spots`);
-    if(response.ok) {
+    if (response.ok) {
       const data = await response.json()
-      // console.log('What does our data look like?', data)
       const spots = data.Spots
-      // console.log('What does our spot data look like?',spots)
       dispatch(acGetAllSpots(spots))
     }
   } catch (error) {
@@ -89,14 +85,11 @@ export const getAllSpots = () => async (dispatch) => {
 };
 
 export const getSpotById = (spotId) => async (dispatch) => {
-  try{
+  try {
     const response = await fetch(`/api/spots/${spotId}`);
-    // console.log('What does this response look like==========>', response)
-    if(response.ok) {
+    if (response.ok) {
       const spot = await response.json();
-      // console.log('What does this data look like==========>', data)
-      // const spot = data.spot
-      // console.log('What does this spot look like=========>', spot)
+
       dispatch(acGetSpotById(spot))
     } else {
       throw new Error('Failed to fetch spot by ID')
@@ -125,10 +118,8 @@ export const updateSpot = (spot) => async (dispatch) => {
         imageUrls: spot.imageUrls,
       }),
     });
-    // console.log('What does this response look like?',response)
     if (response.ok) {
       const updatedSpot = await response.json();
-      // console.log('What does this look like ========>', updateSpot)
       dispatch(acUpdateSpot(updatedSpot));
       return updatedSpot;
     } else {
@@ -146,10 +137,10 @@ export const deleteSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
       method: "DELETE",
     });
-    if(response.ok) {
+    if (response.ok) {
       dispatch(acDeleteSpot(spotId))
     }
-  }  catch (error) {
+  } catch (error) {
     const errors = await error.json();
     return errors;
   }
@@ -159,13 +150,49 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 //! 7 Moving to Reducer FROM normal action creator
 
 //! Coming from our Redux Store Shape
-const initialState = { allSpots: {}, singleSpot: {} };
+const initialState = {
+  allSpots: {},
+  singleSpot: {}
+};
+
+// const spotReducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case CREATE_SPOT: {
+//       return {
+//         ...state, spot: {
+//           [action.spots.id]: action.spots
+//         }
+//       }
+//     }
+//     case GET_ALL_SPOTS: {
+//       let modifiedState = { ...state }
+//     }
+
+
+
+//     case UPDATE_SPOT: {
+//       return { ...state, spot: { [action.spots.id]: action.spots } }
+//     }
+
+//     case DELETE_SPOT: {
+//       const modifiedState = {
+//         ...state,
+//         allSpots: { ...state.allSpots }
+//       }
+//       delete modifiedState.allSpots[action.spotId]
+//       return modifiedState
+//     }
+//     case GET_SPOT_BY_ID: {
+
+//     }
+//   }
+// }
+
 
 const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_SPOT: {
       return {
-        //? We create a shallow copy to make sure we don't mutate our original state
         ...state,
         allSpots: {
           ...state.allSpots,
@@ -180,7 +207,6 @@ const spotReducer = (state = initialState, action) => {
       }
     }
     case GET_SPOT_BY_ID: {
-      // console.log('Checking out the state', state)
       return {
         ...state,
         singleSpot: action.spotId,
@@ -201,19 +227,18 @@ const spotReducer = (state = initialState, action) => {
       state.allSpots.forEach((spot) => {
         stateObject[spot.id] = spot
       })
-      console.log("stateObject ==========>", stateObject)
       delete stateObject[spotId]
-      // console.log('Looking at spotId========>',spotId)
-      // const updatedAllSpots = { ...state.allSpots };
-      // console.log('Looking updatedAllSpots===>', updatedAllSpots)
-      // delete updatedAllSpots[spotId]
       const stateArray = Object.values(stateObject)
       return {
         ...state,
         allSpots: stateArray
       };
+      // console.log('Looking at spotId========>',spotId)
+      // const updatedAllSpots = { ...state.allSpots };
+      // console.log('Looking updatedAllSpots===>', updatedAllSpots)
+      // delete updatedAllSpots[spotId]
     }
-    
+
     default:
       return state;
     }

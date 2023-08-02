@@ -1,4 +1,5 @@
 import { csrfFetch } from "./csrf";
+import arrayToObjectByKey from '../utils'
 
 const CREATE_SPOT = "spots/newSpot";
 const GET_ALL_SPOTS = "spots/GET_ALL_SPOTS";
@@ -155,40 +156,6 @@ const initialState = {
   singleSpot: {}
 };
 
-// const spotReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case CREATE_SPOT: {
-//       return {
-//         ...state, spot: {
-//           [action.spots.id]: action.spots
-//         }
-//       }
-//     }
-//     case GET_ALL_SPOTS: {
-//       let modifiedState = { ...state }
-//     }
-
-
-
-//     case UPDATE_SPOT: {
-//       return { ...state, spot: { [action.spots.id]: action.spots } }
-//     }
-
-//     case DELETE_SPOT: {
-//       const modifiedState = {
-//         ...state,
-//         allSpots: { ...state.allSpots }
-//       }
-//       delete modifiedState.allSpots[action.spotId]
-//       return modifiedState
-//     }
-//     case GET_SPOT_BY_ID: {
-
-//     }
-//   }
-// }
-
-
 const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_SPOT: {
@@ -201,9 +168,10 @@ const spotReducer = (state = initialState, action) => {
       };
     }
     case GET_ALL_SPOTS: {
+      const allSpotsObject = arrayToObjectByKey(action.spots, 'id');
       return {
         ...state,
-        allSpots: action.spots
+        allSpots: allSpotsObject
       }
     }
     case GET_SPOT_BY_ID: {
@@ -223,16 +191,23 @@ const spotReducer = (state = initialState, action) => {
     }
     case DELETE_SPOT: {
       const spotId = action.spots
-      const stateObject = {}
-      state.allSpots.forEach((spot) => {
-        stateObject[spot.id] = spot
-      })
-      delete stateObject[spotId]
-      const stateArray = Object.values(stateObject)
+      const allSpotsCopy = { ...state.allSpots };
+      delete allSpotsCopy[spotId];
       return {
         ...state,
-        allSpots: stateArray
-      };
+        allSpots: allSpotsCopy
+      }
+
+      // const stateObject = {}
+      // state.allSpots.forEach((spot) => {
+      //   stateObject[spot.id] = spot
+      // })
+      // delete stateObject[spotId]
+      // const stateArray = Object.values(stateObject)
+      // return {
+      //   ...state,
+      //   allSpots: stateArray
+      // };
       // console.log('Looking at spotId========>',spotId)
       // const updatedAllSpots = { ...state.allSpots };
       // console.log('Looking updatedAllSpots===>', updatedAllSpots)

@@ -30,7 +30,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
     const isValid = Object.keys(validationObject).length === 0;
     setIsFormValid(isValid);
   }, [validationObject]);
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     // Validate the fields of the spot object

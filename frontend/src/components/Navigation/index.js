@@ -1,32 +1,34 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 
-function Navigation({ isLoaded }){
+function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
-      </li>
-      {isLoaded && (
-        <>
-        {/* <li>
-          <NavLink to='/spots/new'>Create a New Spot</NavLink>
-        </li> */}
-        {/* <li>
-          <NavLink to='/spots/manage'>Manage Spots</NavLink>
-        </li> */}
-        <li>
-          <ProfileButton user={sessionUser} />
-        </li>
-        </>
-      )}
-    </ul>
+    <div className="navigation-container">
+      <div className="logo-container">
+        <Link to="/">
+          <img src="https://www.digital.ink/wp-content/uploads/airbnb_logo_detail.jpg"
+            alt="Logo" className="logo-img" />
+        </Link>
+      </div>
+
+      <ul>
+
+        {isLoaded && (
+          <>
+            <li>
+              <ProfileButton user={sessionUser} />
+            </li>
+          </>
+        )}
+      </ul>
+    </div>
   );
 }
+
 
 export default Navigation;

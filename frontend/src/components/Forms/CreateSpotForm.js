@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createSpot, updateSpot } from '../../store/spots'
@@ -24,54 +24,44 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const [previewImageUrl, setPreviewImageUrl] = useState("");
   const [imageUrls, setImageUrls] = useState(["", "", "", ""])
   const [validationObject, setValidationObject] = useState({});
-  const [isFormValid, setIsFormValid] = useState(false);
 
-  useEffect(() => {
-    if(formType === "UpdateSpot" && spot) {
-      setAddress(spot?.address || "");
-      setCity(spot?.city || "");
-      setState(spot?.state || "");
-      setCountry(spot?.country || "");
-      setName(spot?.name || "");
-      setDescription(spot?.description || "");
-      setPrice(spot?.price || "");
-      setPreviewImageUrl(spot?.preventDefault || "");
-      setImageUrls(spot?.imageUrls || ["", "", "", ""])
-    }
-  }, [formType, spot])
+  const disable = 
+  !address ||
+  !city ||
+  !state ||
+  !country ||
+  !name ||
+  !description ||
+  description.length < 30 ||
+  !price;
 
-  useEffect(() => {
-    const isValid = Object.keys(validationObject).length === 0;
-    setIsFormValid(isValid);
-  }, [validationObject]);
-  
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate the fields of the spot object
+
     const errorsObject = {};
     if (address === "") {
-      errorsObject.address = "You must submit an address";
+      errorsObject.address = "Address is required";
     }
     if (city === "") {
-      errorsObject.city = "You must submit a city";
+      errorsObject.city = "City is required";
     }
     if (state === "") {
-      errorsObject.state = "You must submit a state";
+      errorsObject.state = "State is required";
     }
     if (country === "") {
-      errorsObject.country = "You must submit a country";
+      errorsObject.country = "Country is required";
     }
     if (name === "") {
-      errorsObject.name = "You must submit a name";
+      errorsObject.name = "Name is required";
     }
     if (description === "") {
-      errorsObject.description = "You must submit a description";
+      errorsObject.description = "Description is required";
     }
     if (description.length < 30) {
-      errorsObject.description = "Description must be at least 30 characters";
+      errorsObject.description = "Description needs 30 or more characters";
     }
     if (price === "") {
-      errorsObject.price = "You must submit a price";
+      errorsObject.price = "Price per night is required";
     }
     setValidationObject(errorsObject);
 
@@ -98,22 +88,24 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
         updatedSpot.id = spot?.id
         dispatch(updateSpot(updatedSpot))
       } else {
-        dispatch(createSpot(updatedSpot));
+        const createdSpot = await dispatch(createSpot(updatedSpot))
+        
+        setAddress("");
+        setCity("");
+        setState("");
+        setCountry("");
+        setName("");
+        setLat(50);
+        setLng(50);
+        setDescription("");
+        setPrice("");
+        setPreviewImageUrl("");
+        setImageUrls(["", "", "", ""])
+        
+        if(createdSpot && createdSpot.id) {
+        history.push(`/spots/${createdSpot.id}`);
+        }
       }
-
-    setAddress("");
-    setCity("");
-    setState("");
-    setCountry("");
-    setName("");
-    setLat(50);
-    setLng(50);
-    setDescription("");
-    setPrice("");
-    setPreviewImageUrl("");
-    setImageUrls(["", "", "", ""])
-
-    history.push("/");
   };
 
   return (
@@ -253,7 +245,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
             placeholder="Image URL"
           />
         </label>
-        <button type="submit" disabled={!isFormValid}>
+        <button type="submit" disabled={disable}>
           {buttonText || "Create Spot"}
         </button>
       </form>

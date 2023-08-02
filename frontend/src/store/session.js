@@ -3,7 +3,7 @@ import {csrfFetch} from './csrf'
 /** Action Type Constants*/
 export const SET_USER = 'session/setUser'
 export const REMOVE_USER = 'session/removeUser'
-
+export const LOGIN_DEMO_USER = 'session/demoUser'
 
 /** Action Creators*/
 export const setUser = (user) => { //return this way
@@ -15,6 +15,11 @@ export const setUser = (user) => { //return this way
 
 export const removeUser = () => ({ //or return this way using ()
     type: REMOVE_USER
+})
+
+export const demoUser = (user) => ({
+  type: LOGIN_DEMO_USER,
+  payload: user
 })
 
 /** Thunk Action Creators */
@@ -65,6 +70,31 @@ export const restoreUser = () => async (dispatch) => {
     return response;
   };
 
+  export const loginDemoUser = () => async (dispatch) => {
+    try {
+      const response = await csrfFetch('api/auth/demo', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if(response.ok) {
+        const demoUser = {
+          credential: 'FakeUser1',
+          password: 'password2'
+        }
+
+        await dispatch(login(demoUser))
+        return response;
+      } else {
+        throw new Error('Failed to log in as the demo user.')
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
 /** Reducer*/
 const initialState = {user: null}
 
@@ -80,6 +110,11 @@ const sessionReducer = (state = initialState, action) => {
             newState = Object.assign({}, state);
             newState.user = null;
             return newState;
+        case LOGIN_DEMO_USER:
+          return {
+            ...state,
+            user: action.payload,
+          }
         default:
             return state
     }

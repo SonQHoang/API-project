@@ -30,3 +30,13 @@
 .logo-container img {
     height: 50px
 }
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none
+}
+
+.create-spot-button {
+    margin-right: 10px;
+}

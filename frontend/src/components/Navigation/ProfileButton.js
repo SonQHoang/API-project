@@ -2,12 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
-import ManageSpots from '../SpotsCRUD/manageSpots'
+import LoginFormModal from '../Modals/LoginFormModal'
+import SignupFormModal from '../Modals/SignupFormModal';
 import CreateSpotForm from '../Forms/CreateSpotForm'
 import { useHistory } from 'react-router-dom';
-import { getSpotById } from "../../store/spots";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();

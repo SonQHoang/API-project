@@ -118,7 +118,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
 
   return (
     <>
-      <h1>User's Spots</h1>
+      <h1>Create a New Spot</h1>
       <h2>Where's your place located?</h2>
       <h3>Guests will only get exact address once they have booked a reservation.</h3>
       <form onSubmit={handleSubmit}>
@@ -214,7 +214,6 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
         <h2>Liven up your spot with photos</h2>
         <h3>Submit a link to at least one photo to publish your spot.</h3>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
@@ -223,34 +222,39 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
+          />
+        </label>
+        <label>
+          <input
+            type="text"
+            value={previewImageUrl}
+            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            placeholder="Image URL"
           />
         </label>
         <button type="submit" disabled={!isFormValid}>
-          {buttonText || "Create a New Spot"}
+          {buttonText || "Create Spot"}
         </button>
       </form>
     </>

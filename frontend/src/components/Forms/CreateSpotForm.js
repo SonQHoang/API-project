@@ -10,60 +10,96 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  //!9. Using useSelector for our component to listen to our changes in state
-
-  const [address, setAddress] = useState(spot?.address || "");
-  const [city, setCity] = useState(spot?.city || "");
-  const [state, setState] = useState(spot?.state || "");
-  const [country, setCountry] = useState(spot?.country || "");
-  const [name, setName] = useState(spot?.name || "");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [name, setName] = useState("");
   const [lat, setLat] = useState(50);
   const [lng, setLng] = useState(50);
-  const [description, setDescription] = useState(spot?.description || "");
-  const [price, setPrice] = useState(spot?.price || "");
-  const [previewImageUrl, setPreviewImageUrl] = useState(spot?.previewImageUrl || "");
-  const [imageUrls, setImageUrls] = useState(spot?.imageUrls || ["", "", "", ""])
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState(["", "", "", ""])
   const [validationObject, setValidationObject] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [formFilled, setFormFilled] = useState(false)
+
+  const checkFormFilled = () => {
+    if(
+      address !== "" ||
+      city !== "" ||
+      state !== "" ||
+      country !== "" ||
+      name !== "" ||
+      description !== "" ||
+      price !== "" ||
+      previewImageUrl !== "" ||
+      imageUrls.some(url => url !== "")
+    ) {
+      setFormFilled(true)
+    } else {
+      setFormFilled(false)
+    }
+  }
+
+  useEffect(() => {
+    if(formType === "UpdateSpot" && spot) {
+      setAddress(spot?.address || "");
+      setCity(spot?.city || "");
+      setState(spot?.state || "");
+      setCountry(spot?.country || "");
+      setName(spot?.name || "");
+      setDescription(spot?.description || "");
+      setPrice(spot?.price || "");
+      setPreviewImageUrl(spot?.preventDefault || "");
+      setImageUrls(spot?.imageUrls || ["", "", "", ""])
+    }
+    checkFormFilled()
+  }, [formType, spot])
 
   useEffect(() => {
     const isValid = Object.keys(validationObject).length === 0;
     setIsFormValid(isValid);
-  }, [validationObject]);
+    checkFormFilled()
+  }, [validationObject,  address, city, state, country, name, description, price, previewImageUrl, imageUrls]);
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate the fields of the spot object
+
     const errorsObject = {};
     if (address === "") {
-      errorsObject.address = "You must submit an address";
+      errorsObject.address = "Address is required";
     }
     if (city === "") {
-      errorsObject.city = "You must submit a city";
+      errorsObject.city = "City is required";
     }
     if (state === "") {
-      errorsObject.state = "You must submit a state";
+      errorsObject.state = "State is required";
     }
     if (country === "") {
-      errorsObject.country = "You must submit a country";
+      errorsObject.country = "Country is required";
     }
     if (name === "") {
-      errorsObject.name = "You must submit a name";
+      errorsObject.name = "Name is required";
     }
     if (description === "") {
-      errorsObject.description = "You must submit a description";
+      errorsObject.description = "Description is required";
+    }
+    if (description.length < 30) {
+      errorsObject.description = "Description needs 30 or more characters";
     }
     if (price === "") {
-      errorsObject.price = "You must submit a price";
+      errorsObject.price = "Price per night is required";
     }
     setValidationObject(errorsObject);
 
     if (Object.keys(errorsObject).length > 0) {
+      setIsFormValid(false)
       return;
     }
 
     const updatedSpot = {
-      ...spot,
       address,
       city,
       state,
@@ -79,29 +115,32 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
 
 
       if(formType === 'UpdateSpot') {
+        updatedSpot.id = spot?.id
         dispatch(updateSpot(updatedSpot))
       } else {
-        dispatch(createSpot(updatedSpot));
+        const createdSpot = await dispatch(createSpot(updatedSpot))
+        
+        setAddress("");
+        setCity("");
+        setState("");
+        setCountry("");
+        setName("");
+        setLat(50);
+        setLng(50);
+        setDescription("");
+        setPrice("");
+        setPreviewImageUrl("");
+        setImageUrls(["", "", "", ""])
+        
+        if(createdSpot && createdSpot.id) {
+        history.push(`/spots/${createdSpot.id}`);
+        }
       }
-
-    setAddress("");
-    setCity("");
-    setState("");
-    setCountry("");
-    setName("");
-    setLat(50);
-    setLng(50);
-    setDescription("");
-    setPrice("");
-    setPreviewImageUrl("");
-    setImageUrls(["", "", "", ""])
-
-    history.push("/");
   };
 
   return (
     <>
-      <h1>User's Spots</h1>
+      <h1>Create a New Spot</h1>
       <h2>Where's your place located?</h2>
       <h3>Guests will only get exact address once they have booked a reservation.</h3>
       <form onSubmit={handleSubmit}>
@@ -197,7 +236,6 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
         <h2>Liven up your spot with photos</h2>
         <h3>Submit a link to at least one photo to publish your spot.</h3>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
@@ -206,34 +244,39 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
           />
         </label>
         <label>
-          Preview Image URL
           <input
             type="text"
             value={previewImageUrl}
             onChange={(e) => setPreviewImageUrl(e.target.value)}
-            placeholder="Preview Image URL"
+            placeholder="Image URL"
           />
         </label>
-        <button type="submit" disabled={!isFormValid}>
-          {buttonText || "Create a New Spot"}
+        <label>
+          <input
+            type="text"
+            value={previewImageUrl}
+            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            placeholder="Image URL"
+          />
+        </label>
+        <button type="submit" disabled={!formFilled}>
+          {buttonText || "Create Spot"}
         </button>
       </form>
     </>

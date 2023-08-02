@@ -1,3 +1,42 @@
 .hidden {
     display: none
 }
+
+.navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navigation-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation-container ul li {
+    margin-right: 15px;
+}
+
+.logo-img {
+    width: 100px;
+    height: 50px;
+}
+
+.logo-container {
+    margin-right: auto;
+}
+
+.logo-container img {
+    height: 50px
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none
+}
+
+.create-spot-button {
+    margin-right: 10px;
+}

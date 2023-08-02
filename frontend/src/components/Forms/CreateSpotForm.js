@@ -12,19 +12,33 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
 
   //!9. Using useSelector for our component to listen to our changes in state
 
-  const [address, setAddress] = useState(spot?.address || "");
-  const [city, setCity] = useState(spot?.city || "");
-  const [state, setState] = useState(spot?.state || "");
-  const [country, setCountry] = useState(spot?.country || "");
-  const [name, setName] = useState(spot?.name || "");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [name, setName] = useState("");
   const [lat, setLat] = useState(50);
   const [lng, setLng] = useState(50);
-  const [description, setDescription] = useState(spot?.description || "");
-  const [price, setPrice] = useState(spot?.price || "");
-  const [previewImageUrl, setPreviewImageUrl] = useState(spot?.previewImageUrl || "");
-  const [imageUrls, setImageUrls] = useState(spot?.imageUrls || ["", "", "", ""])
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [previewImageUrl, setPreviewImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState(["", "", "", ""])
   const [validationObject, setValidationObject] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if(formType === "UpdateSpot" && spot) {
+      setAddress(spot?.address || "");
+      setCity(spot?.city || "");
+      setState(spot?.state || "");
+      setCountry(spot?.country || "");
+      setName(spot?.name || "");
+      setDescription(spot?.description || "");
+      setPrice(spot?.price || "");
+      setPreviewImageUrl(spot?.preventDefault || "");
+      setImageUrls(spot?.imageUrls || ["", "", "", ""])
+    }
+  }, [formType, spot])
 
   useEffect(() => {
     const isValid = Object.keys(validationObject).length === 0;
@@ -53,6 +67,9 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
     if (description === "") {
       errorsObject.description = "You must submit a description";
     }
+    if (description.length < 30) {
+      errorsObject.description = "Description must be at least 30 characters";
+    }
     if (price === "") {
       errorsObject.price = "You must submit a price";
     }
@@ -63,7 +80,6 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
     }
 
     const updatedSpot = {
-      ...spot,
       address,
       city,
       state,
@@ -79,6 +95,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
 
 
       if(formType === 'UpdateSpot') {
+        updatedSpot.id = spot?.id
         dispatch(updateSpot(updatedSpot))
       } else {
         dispatch(createSpot(updatedSpot));

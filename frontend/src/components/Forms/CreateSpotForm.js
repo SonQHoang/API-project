@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createSpot, updateSpot } from '../../store/spots'
@@ -9,8 +9,6 @@ import { createSpot, updateSpot } from '../../store/spots'
 const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const dispatch = useDispatch();
   const history = useHistory();
-
-  //!9. Using useSelector for our component to listen to our changes in state
 
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -24,17 +22,48 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const [previewImageUrl, setPreviewImageUrl] = useState("");
   const [imageUrls, setImageUrls] = useState(["", "", "", ""])
   const [validationObject, setValidationObject] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [formFilled, setFormFilled] = useState(false)
 
-  const disable = 
-  !address ||
-  !city ||
-  !state ||
-  !country ||
-  !name ||
-  !description ||
-  description.length < 30 ||
-  !price;
+  const checkFormFilled = () => {
+    if(
+      address !== "" ||
+      city !== "" ||
+      state !== "" ||
+      country !== "" ||
+      name !== "" ||
+      description !== "" ||
+      price !== "" ||
+      previewImageUrl !== "" ||
+      imageUrls.some(url => url !== "")
+    ) {
+      setFormFilled(true)
+    } else {
+      setFormFilled(false)
+    }
+  }
 
+  useEffect(() => {
+    if(formType === "UpdateSpot" && spot) {
+      setAddress(spot?.address || "");
+      setCity(spot?.city || "");
+      setState(spot?.state || "");
+      setCountry(spot?.country || "");
+      setName(spot?.name || "");
+      setDescription(spot?.description || "");
+      setPrice(spot?.price || "");
+      setPreviewImageUrl(spot?.preventDefault || "");
+      setImageUrls(spot?.imageUrls || ["", "", "", ""])
+    }
+    checkFormFilled()
+  }, [formType, spot])
+
+  useEffect(() => {
+    const isValid = Object.keys(validationObject).length === 0;
+    setIsFormValid(isValid);
+    checkFormFilled()
+  }, [validationObject,  address, city, state, country, name, description, price, previewImageUrl, imageUrls]);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -66,6 +95,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
     setValidationObject(errorsObject);
 
     if (Object.keys(errorsObject).length > 0) {
+      setIsFormValid(false)
       return;
     }
 
@@ -245,7 +275,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
             placeholder="Image URL"
           />
         </label>
-        <button type="submit" disabled={disable}>
+        <button type="submit" disabled={!formFilled}>
           {buttonText || "Create Spot"}
         </button>
       </form>

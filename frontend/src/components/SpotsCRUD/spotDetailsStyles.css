@@ -1,0 +1,14 @@
+.large-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.small-image {
+    width: 100px;
+    height: 100px;
+    margin: 5px
+}
+
+.details-container {
+    display: flex;
+}

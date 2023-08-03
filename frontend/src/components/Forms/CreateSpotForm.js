@@ -67,7 +67,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
     const isValid = Object.keys(validationObject).length === 0;
     setIsFormValid(isValid);
     checkFormFilled()
-  }, [validationObject, address, city, state, country, name, description, price, previewImageUrl, imageUrls]);
+  }, [validationObject, address, city, state, country, name, description, price, previewImage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +97,15 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
     if (price === "") {
       errorsObject.price = "Price per night is required";
     }
+    if(!previewImage) {
+      errorsObject.previewImage = "Preview image is required "
+    }
+    if(!previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.png')) {
+      errorsObject.previewImage = "Image URL must end in .png, .jpg, or .jpeg"
+    }
     setValidationObject(errorsObject);
+
+   
 
     if (Object.keys(errorsObject).length > 0) {
       setIsFormValid(false)
@@ -160,8 +168,11 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       }
     }
   };
-
+  const isValidImageUrl = (url) => {
+    return url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png');
+  };
   return (
+    
     <>
       <h1>Create a New Spot</h1>
       <h2>Where's your place located?</h2>
@@ -266,6 +277,11 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
             placeholder="Preview Image URL"
           />
         </label>
+        {(!previewImage || !isValidImageUrl(previewImage)) && (
+  <p className="errors">
+    {previewImage ? 'Image URL must end in .png, .jpg, or .jpeg' : 'Preview image is required'}
+  </p>
+)}
         <label>
           <input
             type="text"
@@ -274,6 +290,9 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
             placeholder="Image URL"
           />
         </label>
+        {previewImage2 && !isValidImageUrl(previewImage2) && (
+  <p className="errors">Image URL must end in .png, .jpg, or .jpeg</p>
+)}
         <label>
           <input
             type="text"
@@ -282,6 +301,9 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
             placeholder="Image URL"
           />
         </label>
+        {previewImage3 && !isValidImageUrl(previewImage3) && (
+  <p className="errors">Image URL must end in .png, .jpg, or .jpeg</p>
+)}
         <label>
           <input
             type="text"
@@ -290,6 +312,9 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
             placeholder="Image URL"
           />
         </label>
+        {previewImage4 && !isValidImageUrl(previewImage4) && (
+  <p className="errors">Image URL must end in .png, .jpg, or .jpeg</p>
+)}
         <label>
           <input
             type="text"
@@ -298,6 +323,9 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
             placeholder="Image URL"
           />
         </label>
+        {previewImage5 && !isValidImageUrl(previewImage5) && (
+  <p className="errors">Image URL must end in .png, .jpg, or .jpeg</p>
+)}
         <button type="submit" disabled={!formFilled}>
           {buttonText || "Create Spot"}
         </button>

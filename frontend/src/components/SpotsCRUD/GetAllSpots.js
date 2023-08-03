@@ -1,12 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { getAllSpots, deleteSpot } from '../../store/spots';
-import { useEffect, useState } from 'react';
+// import { useHistory } from 'react-router-dom';
+import { getAllSpots } from '../../store/spots';
+import { useEffect } from 'react';
 // import UpdateSpotModal from '../UpdateSpotModal'
 
 function GetAllSpots() {
-    const history = useHistory();
+    // const history = useHistory();
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -18,19 +18,9 @@ function GetAllSpots() {
 
 
     // const [showUpdateModal, setShowUpdateModal] = useState(false);
-    const [selectedSpotId, setSelectedSpotId] = useState(null)
+    // const [selectedSpotId, setSelectedSpotId] = useState(null)
 
-    const handleDelete = (spotId) => {
-        setSelectedSpotId(spotId)
-        // setShowUpdateModal(true)
-        dispatch(deleteSpot(spotId))
-    }
 
-    const handleUpdate = (spotId) => {
-        setSelectedSpotId(spotId);
-        history.push(`/spots/${spotId}/update`)
-        // setShowUpdateModal(true)
-    }
 
     return (
         <>
@@ -45,8 +35,11 @@ function GetAllSpots() {
                         <p>{`State: ${spot.state}`}</p>
                         <p>{`Country: ${spot.country}`}</p>
                         <p>{`Description: ${spot.description}`}</p>
-                        {/* <button onClick={() => handleDelete(spot.id)}>Delete</button>
-                        <button onClick={() => handleUpdate(spot.id)}>Update</button> */}
+                        {spot.largeImageUrl && <img src={spot.largeImageUrl} alt="Guitar" />}
+                        {spot.SpotImages && spot.SpotImages.map((image, index) => (
+                            <img key={index} src={image.url} alt={`Guitar ${index + 1}`} />
+                        ))}
+
                     </div>
                 )
             })}

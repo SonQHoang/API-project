@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getSpotById } from '../../store/spots'
 import { useEffect } from 'react'
-
+import './spotDetailsStyles.css';
 
 function SpotDetailsPage() {
     const dispatch = useDispatch()
@@ -18,14 +18,17 @@ function SpotDetailsPage() {
     return (
         <div>
             <h2>{`${spot.name}`}</h2>
-            <p>{`City: ${spot.city}`}</p>
-            <p>{`State: ${spot.state}`}</p>
-            <p>{`Country: ${spot.country}`}</p>
-            <p>{`Large Image`}</p>
-            <p>{`Small Image 1`}</p>
-            <p>{`Small Image 2`}</p>
-            <p>{`Small Image 3`}</p>
-            <p>{`Small Image 4`}</p>
+            <div className="details-container">
+            <p>{`${spot.city}`}</p>
+            <p>{`${spot.state}`}</p>
+            <p>{`${spot.country}`}</p>
+            </div>
+            <div>
+            {spot.largeImageUrl && <img className="large-image" src={spot.largeImageUrl} alt="Guitar" />}
+                        {spot.SpotImages && spot.SpotImages.map((image, index) => (
+                            <img key={index} className="small-image" src={image.url} alt={`Guitar ${index + 1}`} />
+                        ))}
+            </div>
             <p>{`Hosted by Son Hoang`}</p>
             <p>{`Paragraph: ${spot.description}`}</p>
         </div>

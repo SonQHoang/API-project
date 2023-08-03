@@ -7,6 +7,7 @@ const GET_ALL_SPOTS = "spots/GET_ALL_SPOTS";
 const UPDATE_SPOT = "spots/UPDATE_SPOT";
 const DELETE_SPOT = "spots/DELETE_SPOT";
 const GET_SPOT_BY_ID = "spots/GET_SPOT_BY_ID"
+const GET_USER_SPOTS = "spots/GET_USER_SPOTS"
 
 
 //-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
@@ -18,6 +19,14 @@ const acCreateSpot = (spots) => {
     spots,
   };
 };
+
+const acGetUserSpots = (spots) => {
+  console.log('spots, checking them =======>', spots)
+  return {
+    type: GET_USER_SPOTS,
+    spots
+  }
+}
 
 const acCreateSpotImages = (spotImages) => {
     console.log('Action payload:========>', spotImages);
@@ -82,10 +91,40 @@ export const createSpot = (data) => async (dispatch) => {
   }
 };
 
+export const getUserSpots = () => async (dispatch) => {
+  // console.log('Is this giving me anything?========>', ownerId)
+  try {
+    const response = await fetch(`/api/spots/current/`);
+    console.log('response========>', response)
+    if (response.ok) {
+      const data = await response.json()
+      console.log('What is this data =========>', data)
+      const spots = data.Spots
+      console.log('What are these spots?=======>', spots)
+      dispatch(acGetUserSpots(spots))
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const getAllSpots = () => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/spots`);
+    if (response.ok) {
+      const data = await response.json()
+      const spots = data.Spots
+      dispatch(acGetAllSpots(spots))
+    }
+  } catch (error) {
+    console.error(error)
+  }
+};
+
 export const createSpotImage = (spotId, data) => async (dispatch) => {
   console.log('spotId========>', spotId)
   try {
-    const response = await csrfFetch(`api/spots/${spotId}/images`, {
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -104,19 +143,6 @@ export const createSpotImage = (spotId, data) => async (dispatch) => {
     return errors;
   }
 }
-
-export const getAllSpots = () => async (dispatch) => {
-  try {
-    const response = await fetch(`/api/spots`);
-    if (response.ok) {
-      const data = await response.json()
-      const spots = data.Spots
-      dispatch(acGetAllSpots(spots))
-    }
-  } catch (error) {
-    console.error(error)
-  }
-};
 
 export const getSpotById = (spotId) => async (dispatch) => {
   try {
@@ -211,6 +237,15 @@ const spotReducer = (state = initialState, action) => {
       return {
         ...state,
         allSpots: allSpotsObject
+      }
+    }
+    case GET_USER_SPOTS: {
+      console.log('actions.spots======>', action.spots)
+      // const allSpotsObject = arrayToObjectByKey(action.spots, 'ownerId');
+      // console.log('allSpotsObject========>', allSpotsObject)
+      return {
+        ...state,
+        allSpots: action.spots
       }
     }
     case GET_SPOT_BY_ID: {

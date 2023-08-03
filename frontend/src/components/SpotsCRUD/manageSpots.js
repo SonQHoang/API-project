@@ -9,10 +9,13 @@ function ManageSpots() {
             <h1>Manage Spots</h1>
             <ul>
                 <li>
-                    <Link to='/spots/all'>Get Your Spots</Link>
+                    <Link to='/spots/all'>See All Spots</Link>
                 </li>
                 <li>
                     <Link to='/spots/new'>Create a New Spot</Link>
+                </li>
+                <li>
+                    <Link to='/spots/current'>Get All Your Spots</Link>
                 </li>
                 {/* <li>
                     <Link to={`/spots/`}>Find a Specific Spot</Link>

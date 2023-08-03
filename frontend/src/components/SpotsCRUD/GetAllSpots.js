@@ -34,7 +34,7 @@ function GetAllSpots() {
 
     return (
         <>
-            <h1>Your Spots</h1>
+            <h1>All Spots</h1>
 
             {spots.map(spot => {
                 return (
@@ -45,8 +45,8 @@ function GetAllSpots() {
                         <p>{`State: ${spot.state}`}</p>
                         <p>{`Country: ${spot.country}`}</p>
                         <p>{`Description: ${spot.description}`}</p>
-                        <button onClick={() => handleDelete(spot.id)}>Delete</button>
-                        <button onClick={() => handleUpdate(spot.id)}>Update</button>
+                        {/* <button onClick={() => handleDelete(spot.id)}>Delete</button>
+                        <button onClick={() => handleUpdate(spot.id)}>Update</button> */}
                     </div>
                 )
             })}

@@ -123,14 +123,24 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       updatedSpot.id = spot?.id
       dispatch(updateSpot(updatedSpot))
       history.push(`/spots/${spot.id}`)
-      console.log('updatedSpot==========>', updatedSpot)
+      // console.log('updatedSpot==========>', updatedSpot)
     } else {
       const createdSpot = await dispatch(createSpot(updatedSpot));
-      await dispatch(createSpotImage(updatedSpot.id, previewImage))
-      await dispatch(createSpotImage(updatedSpot.id, previewImage2))
-      await dispatch(createSpotImage(updatedSpot.id, previewImage3))
-      await dispatch(createSpotImage(updatedSpot.id, previewImage4))
-      await dispatch(createSpotImage(updatedSpot.id, previewImage5))
+      console.log('createSpot=======>', createdSpot)
+      if(previewImage) {
+        await dispatch(createSpotImage(createdSpot.id, previewImage))
+      }
+      if(previewImage2) {
+        await dispatch(createSpotImage(createdSpot.id, previewImage2))
+      }
+      if(previewImage3) {
+        await dispatch(createSpotImage(createdSpot.id, previewImage3))
+      }
+      if(previewImage4) {
+        await dispatch(createSpotImage(createdSpot.id, previewImage4))
+      }if(previewImage5) {
+        await dispatch(createSpotImage(createdSpot.id, previewImage5))
+      }
       
 
       setAddress("");

@@ -2,10 +2,12 @@ import { csrfFetch } from "./csrf";
 import arrayToObjectByKey from '../utils'
 
 const CREATE_SPOT = "spots/newSpot";
+const CREATE_SPOT_IMAGES = "spots/CREATE_SPOT_IMAGES"
 const GET_ALL_SPOTS = "spots/GET_ALL_SPOTS";
 const UPDATE_SPOT = "spots/UPDATE_SPOT";
 const DELETE_SPOT = "spots/DELETE_SPOT";
 const GET_SPOT_BY_ID = "spots/GET_SPOT_BY_ID"
+
 
 //-------------------------------------------------------------------------ACTION CREATORS-------------------------------------------------
 //!6 Action Creator; Taking in info from Thunk Action Creator, sending to reducer
@@ -16,6 +18,14 @@ const acCreateSpot = (spots) => {
     spots,
   };
 };
+
+const acCreateSpotImages = (spotImages) => {
+    console.log('Action payload:========>', spotImages);
+  return {
+    type: CREATE_SPOT_IMAGES,
+    spotImages
+  }
+}
 
 const acGetAllSpots = (spots) => {
   return {
@@ -71,6 +81,29 @@ export const createSpot = (data) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const createSpotImage = (spotId, data) => async (dispatch) => {
+  console.log('spotId========>', spotId)
+  try {
+    const response = await csrfFetch(`api/spots/${spotId}/images`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        url:data,
+        preview: "true"
+      })
+    })
+    if(response.ok) {
+      const images = await response.json()
+      dispatch(acCreateSpotImages(images))
+    } 
+  } catch (error) {
+    const errors = await error.json()
+    return errors;
+  }
+}
 
 export const getAllSpots = () => async (dispatch) => {
   try {
@@ -167,6 +200,12 @@ const spotReducer = (state = initialState, action) => {
         },
       };
     }
+    case CREATE_SPOT_IMAGES: {
+      return { 
+        ...state, 
+        spot: action.spots };
+      }
+
     case GET_ALL_SPOTS: {
       const allSpotsObject = arrayToObjectByKey(action.spots, 'id');
       return {

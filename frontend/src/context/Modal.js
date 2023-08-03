@@ -30,7 +30,7 @@ export function ModalProvider({ children }) {
 
   return (
     <>
-      <ModalContext.Provider value={{contextValue}}>
+      <ModalContext.Provider value={contextValue}>
         {children}
       </ModalContext.Provider>
       <div ref={modalRef} />

@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getSpotById } from '../../store/spots'
-import { useEffect} from 'react'
+import { useEffect } from 'react'
 
 
 function SpotDetailsPage() {
     const dispatch = useDispatch()
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
-    console.log('What does this spot look like?=====>', spot)
+    // console.log('What does this spot look like?=====>', spot)
 
     useEffect(() => {
         dispatch(getSpotById(spotId))

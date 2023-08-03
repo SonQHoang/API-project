@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { createSpot, updateSpot } from '../../store/spots'
+import { createSpot, updateSpot, createSpotImage } from '../../store/spots'
 
 // Whatever we're using as a useSelector doesn't 'have the proper information when it gets rendered
 // Remember useEffect fires last
 
-const CreateSpotsForm = ({spot, formType, buttonText}) => {
+const CreateSpotsForm = ({ spot, formType, buttonText }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -24,9 +24,14 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
   const [validationObject, setValidationObject] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [formFilled, setFormFilled] = useState(false)
+  const [previewImage, setPreviewImage] = useState('')
+  const [previewImage2, setPreviewImage2] = useState('')
+  const [previewImage3, setPreviewImage3] = useState('')
+  const [previewImage4, setPreviewImage4] = useState('')
+  const [previewImage5, setPreviewImage5] = useState('')
 
   const checkFormFilled = () => {
-    if(
+    if (
       address !== "" ||
       city !== "" ||
       state !== "" ||
@@ -44,7 +49,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
   }
 
   useEffect(() => {
-    if(formType === "UpdateSpot" && spot) {
+    if (formType === "UpdateSpot" && spot) {
       setAddress(spot?.address || "");
       setCity(spot?.city || "");
       setState(spot?.state || "");
@@ -52,7 +57,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       setName(spot?.name || "");
       setDescription(spot?.description || "");
       setPrice(spot?.price || "");
-      setPreviewImageUrl(spot?.preventDefault || "");
+      setPreviewImageUrl(spot?.previewImageUrl || "");
       setImageUrls(spot?.imageUrls || ["", "", "", ""])
     }
     checkFormFilled()
@@ -62,8 +67,8 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
     const isValid = Object.keys(validationObject).length === 0;
     setIsFormValid(isValid);
     checkFormFilled()
-  }, [validationObject,  address, city, state, country, name, description, price, previewImageUrl, imageUrls]);
-  
+  }, [validationObject, address, city, state, country, name, description, price, previewImageUrl, imageUrls]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -113,30 +118,37 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       imageUrls,
     };
 
+    
+    if (formType === 'UpdateSpot') {
+      updatedSpot.id = spot?.id
+      dispatch(updateSpot(updatedSpot))
+      history.push(`/spots/${spot.id}`)
+      console.log('updatedSpot==========>', updatedSpot)
+    } else {
+      const createdSpot = await dispatch(createSpot(updatedSpot));
+      await dispatch(createSpotImage(updatedSpot.id, previewImage))
+      await dispatch(createSpotImage(updatedSpot.id, previewImage2))
+      await dispatch(createSpotImage(updatedSpot.id, previewImage3))
+      await dispatch(createSpotImage(updatedSpot.id, previewImage4))
+      await dispatch(createSpotImage(updatedSpot.id, previewImage5))
+      
 
-      if(formType === 'UpdateSpot') {
-        updatedSpot.id = spot?.id
-        dispatch(updateSpot(updatedSpot))
-        history.push(`/spots/${spot.id}`)
-      } else {
-        const createdSpot = await dispatch(createSpot(updatedSpot))
-        
-        setAddress("");
-        setCity("");
-        setState("");
-        setCountry("");
-        setName("");
-        setLat(50);
-        setLng(50);
-        setDescription("");
-        setPrice("");
-        setPreviewImageUrl("");
-        setImageUrls(["", "", "", ""])
-        
-        if(createdSpot && createdSpot.id) {
+      setAddress("");
+      setCity("");
+      setState("");
+      setCountry("");
+      setName("");
+      setLat(50);
+      setLng(50);
+      setDescription("");
+      setPrice("");
+      setPreviewImageUrl("");
+      setImageUrls(["", "", "", ""])
+
+      if (createdSpot && createdSpot.id) {
         history.push(`/spots/${createdSpot.id}`);
-        }
       }
+    }
   };
 
   return (
@@ -205,21 +217,21 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
         </label>
         {validationObject.description && (
           <p className="errors">{validationObject.description}</p>
-          )}
-          <h2>Create a title for your spot</h2>
-          <p>Catch guests' attention with a post title that highlights what makes your place special.</p>
-          <label>
-            Name of your spot
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Name of your spot"
-            />
-          </label>
-          {validationObject.name && (
-            <p className="errors">{validationObject.name}</p>
-          )}
+        )}
+        <h2>Create a title for your spot</h2>
+        <p>Catch guests' attention with a post title that highlights what makes your place special.</p>
+        <label>
+          Name of your spot
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name of your spot"
+          />
+        </label>
+        {validationObject.name && (
+          <p className="errors">{validationObject.name}</p>
+        )}
         <h2>Set a base price for your spot</h2>
         <p>Competitive pricing can help your listing stand out and rank higher in search results.</p>
         <label>
@@ -239,40 +251,40 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
         <label>
           <input
             type="text"
-            value={previewImageUrl}
-            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            value={previewImage}
+            onChange={(e) => setPreviewImage(e.target.value)}
             placeholder="Preview Image URL"
           />
         </label>
         <label>
           <input
             type="text"
-            value={previewImageUrl}
-            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            value={previewImage2}
+            onChange={(e) => setPreviewImage2(e.target.value)}
             placeholder="Image URL"
           />
         </label>
         <label>
           <input
             type="text"
-            value={previewImageUrl}
-            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            value={previewImage3}
+            onChange={(e) => setPreviewImage3(e.target.value)}
             placeholder="Image URL"
           />
         </label>
         <label>
           <input
             type="text"
-            value={previewImageUrl}
-            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            value={previewImage4}
+            onChange={(e) => setPreviewImage4(e.target.value)}
             placeholder="Image URL"
           />
         </label>
         <label>
           <input
             type="text"
-            value={previewImageUrl}
-            onChange={(e) => setPreviewImageUrl(e.target.value)}
+            value={previewImage5}
+            onChange={(e) => setPreviewImage5(e.target.value)}
             placeholder="Image URL"
           />
         </label>

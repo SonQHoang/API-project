@@ -11,4 +11,46 @@
 
 .details-container {
     display: flex;
+    
+}
+.callout-container {
+    display: flex;
+    border: 5px solid black;
+    border-radius: 5px;
+    background-color: #F0f0f0;
+    padding: 10px;
+    flex-direction: column;
+    width: 10rem;
+}
+.callout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #F0f0f0;
+    border-radius: 5px;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: red;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.host-details-reserve-container {
+    display: flex;
+    justify-content: space-between;
+
 }

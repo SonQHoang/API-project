@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal';
-import SignupFormModal from '../SignupFormModal';
-import ManageSpots from '../SpotsCRUD/manageSpots'
+import LoginFormModal from '../Modals/LoginFormModal'
+import SignupFormModal from '../Modals/SignupFormModal';
 import CreateSpotForm from '../Forms/CreateSpotForm'
 import { useHistory } from 'react-router-dom';
 
@@ -12,7 +11,6 @@ function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const history = useHistory()
   const [showMenu, setShowMenu] = useState(false);
-  const [showManageSpots, setShowManageSpots] = useState(false)
   const [showCreateSpotForm, setShowCreateSpotForm] = useState(false);
   const ulRef = useRef();
 
@@ -37,7 +35,7 @@ function ProfileButton({ user }) {
 
   const closeMenu = () => {
     setShowMenu(false);
-    setShowCreateSpotForm(false)
+    // setShowCreateSpotForm(false)
   }
 
   const logout = (e) => {
@@ -46,6 +44,12 @@ function ProfileButton({ user }) {
     closeMenu();
     history.push("/")
   };
+
+  const goToManageSpots = () => {
+    history.push("/spots/manage");
+    closeMenu()
+  }
+
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -61,8 +65,9 @@ function ProfileButton({ user }) {
             <li>Hello {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={() => setShowManageSpots(true)}>Manage Spots</button>
+              <button onClick={goToManageSpots}>Manage Spots</button>
             </li>
+
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
@@ -82,7 +87,6 @@ function ProfileButton({ user }) {
           </>
         )}
       </ul>
-      {showManageSpots && <ManageSpots onClose={() => setShowManageSpots(false)} />}
       {showCreateSpotForm && <CreateSpotForm onClose={() => setShowCreateSpotForm(false)} />}
     </>
   );

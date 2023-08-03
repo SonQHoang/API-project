@@ -8,6 +8,7 @@ import CreateSpotForm from './components/Forms/CreateSpotForm'
 import UpdateSpotForm from "./components/Forms/UpdateSpotForm";
 import ManageSpots from './components/SpotsCRUD/manageSpots'
 import SpotDetailsPage from "./components/SpotsCRUD/SpotDetails";
+import { ModalProvider } from "./context/Modal";
 
 function App() {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function App() {
   }, [dispatch]);
 
   return (
+        <ModalProvider>
     <>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Switch></Switch>}
@@ -31,6 +33,7 @@ function App() {
         <Route exact path="/spots/:spotId" component={SpotDetailsPage}></Route>
       </Switch>
     </>
+        </ModalProvider>
   );
 }
 

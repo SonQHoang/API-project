@@ -117,6 +117,7 @@ const CreateSpotsForm = ({spot, formType, buttonText}) => {
       if(formType === 'UpdateSpot') {
         updatedSpot.id = spot?.id
         dispatch(updateSpot(updatedSpot))
+        history.push(`/spots/${spot.id}`)
       } else {
         const createdSpot = await dispatch(createSpot(updatedSpot))
         

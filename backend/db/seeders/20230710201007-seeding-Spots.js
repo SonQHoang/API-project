@@ -11,51 +11,63 @@ module.exports = {
     return queryInterface.bulkInsert(options,[
       {
         ownerId: 1,
-        address: "123 Disney Land",
-        city: "San Francisco",
-        state: "California",
+        address: "510 Sycamore Street",
+        city: "Nazareth",
+        state: "Pennsylvania",
         country: "United States of America",
         lat: 37.7645358,
         lng: -122.4730327,
-        name: "App Academy",
-        description: "Place where web developers are created",
-        price: 123
+        name: "Martin Guitars",
+        description: "Where legendary music is born",
+        price: 5525
       },
       {
         ownerId: 1,
-        address: "456 Disney Land",
-        city: "San Jose",
+        address: "1980 Gillespie Way",
+        city: "El Cajon",
         state: "California",
         country: "United States of America",
         lat: 37.7645358,
         lng: -122.4730327,
-        name: "Cap Academy",
-        description: "Place where web developers are created",
-        price: 456
+        name: "Taylor Guitars",
+        description: "Solid place to begin learning guitar",
+        price: 2550
       },
       {
         ownerId: 1,
-        address: "789 Disney Land",
-        city: "San Diego",
+        address: "1974 Gillespie Way",
+        city: "El Cajon",
         state: "California",
         country: "United States of America",
         lat: 37.7645358,
         lng: -122.4730327,
-        name: "Zap Academy",
-        description: "Place where web developers are created",
-        price: 789
+        name: "Taylor Guitar Travel",
+        description: "Learn from Bob Taylor himself",
+        price: 1800
       },
       {
-        ownerId: 2,
-        address: "789 Disney Land",
-        city: "San Diego",
+        ownerId: 1,
+        address: "2548 Fender Avenue",
+        city: "Fullerton",
         state: "California",
         country: "United States of America",
         lat: 37.7645358,
         lng: -122.4730327,
-        name: "Clap Academy",
-        description: "Place where web developers are created",
-        price: 789
+        name: "Fender Guitars",
+        description: "Where innovation began",
+        price: 1500
+      },
+      {
+        ownerId: 1,
+        address: "16 McKinstry Street",
+        city: "Hamilton",
+        state: "Ontario",
+        country: "Canada",
+        lat: 37.7645358,
+        lng: -122.4730327,
+        name: "F Bass, Inc",
+        description: "Bringing the funk and the style",
+        price: 12000
       }
     ], {})
   },

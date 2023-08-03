@@ -11,17 +11,27 @@ module.exports = {
     return queryInterface.bulkInsert(options,[
       {
         spotId: 1,
-        url: "www.amazing.jpg",
+        url: "https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691027906/Martin/jacek-dylag-ZHr2TzM1-hk-unsplash_zzfaej.jpg",
         preview: true
       },
       {
         spotId: 2,
-        url: "www.wow.jpg",
+        url: "https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691027897/Martin/nancy-o-connor-6PLkgUeRvVk-unsplash_qsykmd.jpg",
         preview: true
       },
       {
         spotId: 3,
-        url: "www.crazy.jpg",
+        url: "https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691027904/Martin/toyamakanna-MraTwnzVAS0-unsplash_vo3scz.jpg",
+        preview: true
+      },
+      {
+        spotId: 4,
+        url: "https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691028058/fenderStrat/pxfuel_2_po6sw1.jpg",
+        preview: true
+      },
+      {
+        spotId: 5,
+        url: "https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691028082/fBass/AC6-Antique-Brown_rdvgti.jpg",
         preview: true
       },
     ], {})

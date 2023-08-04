@@ -2,13 +2,18 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getSpotById } from '../../store/spots'
 import { useEffect } from 'react'
+import { useState } from 'react';
+import { deleteSpot } from '../../store/spots';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import './spotDetailsStyles.css';
+import CreateReview from '../Forms/CreateReviewForm';
 
 function SpotDetailsPage() {
+    const history = useHistory()
     const dispatch = useDispatch()
     const { spotId } = useParams();
     const spot = useSelector((state) => state.spots.singleSpot)
-    // console.log('What does this spot look like?=====>', spot)
+    const user = useSelector((state) => state.session.user)
 
     const spotPrice = spot?.price || 1;
 
@@ -16,11 +21,27 @@ function SpotDetailsPage() {
         alert('Feature coming soon');
     }
 
+    const isReviewable = 
+    user && spot && user.id !== spot.ownerId && ((review) => review.userId === user.Id)
+    // const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [selectedSpotId, setSelectedSpotId] = useState(null)
+    console.log(isReviewable)
 
     useEffect(() => {
         dispatch(getSpotById(spotId))
     }, [dispatch, spotId])
 
+    const handleDelete = (spotId) => {
+        setSelectedSpotId(spotId)
+        // setShowUpdateModal(true)
+        dispatch(deleteSpot(spotId))
+    }
+
+    const handleUpdate = (spotId) => {
+        setSelectedSpotId(spotId);
+        history.push(`/spots/${spotId}/update`)
+        // setShowUpdateModal(true)
+    }
 
     return (
         <div>
@@ -30,8 +51,6 @@ function SpotDetailsPage() {
                 <p>{`${spot.state}`}</p>
                 <p>{`${spot.country}`}</p>
             </div>
-
-
             <div>
                 {spot.largeImageUrl && <img className="large-image" src={spot.largeImageUrl} alt="Guitar" />}
                 {spot.SpotImages && spot.SpotImages.map((image, index) => (
@@ -45,10 +64,16 @@ function SpotDetailsPage() {
                 </div>
                 <div className="callout-container">
                     <p className="price">{`$${spotPrice} per night`}</p>
-                    <button onClick={handleReserveClick}>Reserve</button>
+                    <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
                 </div>
             </div>
+            <button onClick={() => handleDelete(spot.id)}>Delete</button>
+            <button onClick={() => handleUpdate(spot.id)}>Update</button>
+            <div>
+            {<CreateReview spotId={spotId} />}
+            </div>
         </div>
+
     )
 }
 

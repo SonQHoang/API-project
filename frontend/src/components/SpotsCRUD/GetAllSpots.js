@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllSpots } from '../../store/spots';
 import { useEffect } from 'react';
 // import UpdateSpotModal from '../UpdateSpotModal'
+import SpotTile from './SpotTile';
+import './spotTile.css'
 
 function GetAllSpots() {
     // const history = useHistory();
@@ -15,34 +17,26 @@ function GetAllSpots() {
 
     const spots = useSelector(state => Object.values(state.spots.allSpots)
     );
-
-
-    // const [showUpdateModal, setShowUpdateModal] = useState(false);
-    // const [selectedSpotId, setSelectedSpotId] = useState(null)
-
-
+    console.log('Spot on All Spots===========>', spots)
 
     return (
         <>
             <h1>All Spots</h1>
-
-            {spots.map(spot => {
-                return (
-                    <div key={spot.id}>
-                        <h2>{spot.name}</h2>
-                        <p>{`Address: ${spot.address}`}</p>
-                        <p>{`City: ${spot.city}`}</p>
-                        <p>{`State: ${spot.state}`}</p>
-                        <p>{`Country: ${spot.country}`}</p>
-                        <p>{`Description: ${spot.description}`}</p>
-                        {spot.largeImageUrl && <img src={spot.largeImageUrl} alt="Guitar" />}
-                        {spot.SpotImages && spot.SpotImages.map((image, index) => (
-                            <img key={index} src={image.url} alt={`Guitar ${index + 1}`} />
-                        ))}
-
-                    </div>
-                )
-            })}
+            <div className="spot-tile-list">
+                {spots.map(spot => (
+                    <SpotTile key={spot.id} spot={spot} />
+                ))}
+            </div>
+            {/* <h2>{spot.name}</h2>
+            <p>{`Address: ${spot.address}`}</p>
+            <p>{`City: ${spot.city}`}</p>
+            <p>{`State: ${spot.state}`}</p>
+            <p>{`Country: ${spot.country}`}</p>
+            <p>{`Description: ${spot.description}`}</p>
+            {spot.largeImageUrl && <img src={spot.largeImageUrl} alt="Guitar" />}
+            {spot.SpotImages && spot.SpotImages.map((image, index) => (
+                <img key={index} src={image.url} alt={`Guitar ${index + 1}`} />
+            ))} */}
             {/* {showUpdateModal && (
                 <UpdateSpotModal
                     spotId={selectedSpotId}

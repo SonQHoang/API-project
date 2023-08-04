@@ -1,0 +1,20 @@
+.spot-tile {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 200px;
+  margin: 10px;
+}
+
+.spot-image {
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+}
+
+.spot-info {
+  font-size: 12px;
+}
+
+.spot-name {
+  font-weight: bold;
+}

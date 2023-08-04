@@ -9,6 +9,15 @@ import UpdateSpotForm from "./components/Forms/UpdateSpotForm";
 import ManageSpots from './components/SpotsCRUD/manageSpots'
 import SpotDetailsPage from "./components/SpotsCRUD/SpotDetails";
 import GetAllUserSpots from "./components/SpotsCRUD/GetAllUserSpots";
+import SpotsLandingPage from "./components/SpotsCRUD/SpotLandingPage";
+// import CreateReview from "./components/Forms/CreateReviewForm";
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+
+library.add(solidStar, regularStar);
+
 
 function App() {
   const dispatch = useDispatch();
@@ -23,15 +32,25 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Switch></Switch>}
-      <Switch>
-        <Route exact path="/spots/new"><CreateSpotForm /></Route>
-        <Route exact path="/spots/all"><GetAllSpots /></Route>
-        <Route exact path="/spots/current"><GetAllUserSpots/></Route>
-        <Route exact path="/spots/manage" component={ManageSpots}></Route>
-        <Route exact path="/spots/:spotId/update" component={UpdateSpotForm}></Route>
-        <Route exact path="/spots/:spotId" component={SpotDetailsPage}></Route>
+      {isLoaded && <Switch>
+        <Route exact path="/">
+          <SpotsLandingPage />
+        </Route>
+        <Route exact path="/spots/new">
+          <CreateSpotForm />
+        </Route>
+        <Route exact path="/spots/all">
+          <GetAllSpots />
+        </Route>
+        <Route exact path="/spots/current">
+          <GetAllUserSpots />
+        </Route>
+
+        <Route exact path="/spots/manage" component={ManageSpots} />
+        <Route exact path="/spots/:spotId/update" component={UpdateSpotForm} />
+        <Route exact path="/spots/:spotId" component={SpotDetailsPage} />
       </Switch>
+      }
     </>
   );
 }

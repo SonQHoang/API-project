@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ReviewModal.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
@@ -10,13 +10,38 @@ const ReviewModal = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Review:', review);
+    console.log('Stars:', stars);
+    console.log('Can I test this way===>',{review, stars})
     onSubmit({ review, stars});
     setReview("")
     setStars("")
   };
+
+  
+
+  
+  //! Need to fix this overlay later
+  const modalOverlayRef = useRef();
+
+  const handleClickOutside = (e) => {
+    if (modalOverlayRef.current === e.target) {
+        onSubmit({review, stars});
+        setReview("")
+      }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const disableButtonIf = review.length < 10 || stars === 0;
+
   return (
-    <div className="modal">
+    <div className="modal" ref={modalOverlayRef}>
       <div className="modal-content">
         <div>
         <h2>How was your stay?</h2>

@@ -1,14 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { getAllSpots } from '../../store/spots';
 import { useEffect } from 'react';
 // import UpdateSpotModal from '../UpdateSpotModal'
 import SpotTile from './SpotTile';
 import './spotTile.css'
+import SpotsLandingPage from './SpotLandingPage';
 
 function GetAllSpots() {
-    // const history = useHistory();
+    const history = useHistory();
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -17,15 +18,15 @@ function GetAllSpots() {
 
     const spots = useSelector(state => Object.values(state.spots.allSpots)
     );
-    console.log('Spot on All Spots===========>', spots)
 
     return (
         <>
             <h1>All Spots</h1>
             <div className="spot-tile-list">
                 {spots.map(spot => (
-                    <SpotTile key={spot.id} spot={spot} />
-                ))}
+          <SpotTile key={spot.id} spot={spot} />
+          ))}
+    
             </div>
             {/* <h2>{spot.name}</h2>
             <p>{`Address: ${spot.address}`}</p>

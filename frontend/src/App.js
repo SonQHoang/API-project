@@ -31,8 +31,9 @@ function App() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Switch>
+    <Navigation isLoaded={isLoaded} />
+    {isLoaded && (
+      <Switch>
         <Route exact path="/">
           <SpotsLandingPage />
         </Route>
@@ -45,14 +46,13 @@ function App() {
         <Route exact path="/spots/current">
           <GetAllUserSpots />
         </Route>
-
-        <Route exact path="/spots/manage" component={ManageSpots} />
+        <Route exact path="/spots/manage"></Route>
         <Route exact path="/spots/:spotId/update" component={UpdateSpotForm} />
         <Route exact path="/spots/:spotId" component={SpotDetailsPage} />
       </Switch>
-      }
-    </>
-  );
+    )}
+  </>
+);
 }
 
 export default App;

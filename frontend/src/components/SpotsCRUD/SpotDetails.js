@@ -1,12 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getSpotById } from '../../store/spots'
-import { useEffect } from 'react'
-import { useState } from 'react';
+import { useEffect, useState } from 'react'
 import { deleteSpot } from '../../store/spots';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import './spotDetailsStyles.css';
 import CreateReview from '../Forms/CreateReviewForm';
+import SingleReview from '../ReviewsCRD/singleSpotReview';
+import { getSpotReviews } from '../../store/review';
 
 function SpotDetailsPage() {
     const history = useHistory()
@@ -30,6 +31,16 @@ function SpotDetailsPage() {
     useEffect(() => {
         dispatch(getSpotById(spotId))
     }, [dispatch, spotId])
+
+    //! This useEffect is for getting spotReviews
+    // console.log('spotId is working?====>', spotId)
+    useEffect(() => {
+        dispatch(getSpotReviews(spotId))
+    }, [dispatch,spotId])
+    //! useSelector for spotReviews
+
+    const spotReviews = useSelector((state) => state.reviews.spot);
+    console.log('Looking to see what spotReviews looks like=======>', spotReviews)
 
     const handleDelete = (spotId) => {
         setSelectedSpotId(spotId)
@@ -71,6 +82,10 @@ function SpotDetailsPage() {
             <button onClick={() => handleUpdate(spot.id)}>Update</button>
             <div>
             {<CreateReview spotId={spotId} />}
+            </div>
+            <div>
+                //!! Come back to this
+                {/* {spotReviews && spotReviews.map((review) => <SingleReview key={review.id} review={review} />) } */}
             </div>
         </div>
 

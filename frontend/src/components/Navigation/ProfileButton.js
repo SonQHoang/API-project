@@ -45,8 +45,8 @@ function ProfileButton({ user }) {
     history.push("/")
   };
 
-  const goToManageSpots = () => {
-    history.push("/spots/manage");
+  const goToUserSpots = () => {
+    history.push("/spots/current");
     closeMenu()
   }
 
@@ -65,7 +65,7 @@ function ProfileButton({ user }) {
             <li>Hello {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={goToManageSpots}>Manage Spots</button>
+              <button onClick={goToUserSpots}>Manage Spots</button>
             </li>
 
             <li>

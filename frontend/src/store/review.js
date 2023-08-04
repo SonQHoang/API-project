@@ -15,10 +15,14 @@ const acGetSpotReviews = (spotReviews) => ({
     spotReviews
 })
 
-const acCreateReviews = (review) => ({
-    type: CREATE_REVIEWS,
-    review
-})
+const acCreateReviews = (review) => {
+    console.log("What's here in review=====>", review)
+    return {
+        type: CREATE_REVIEWS,
+        review
+    }
+}
+
 
 const acDeleteReviews = (reviewId) => ({
     type: DELETE_REVIEWS,
@@ -28,7 +32,7 @@ const acDeleteReviews = (reviewId) => ({
 
 export const getCurrentReviews = (spots) => async (dispatch) => {
     try {
-        const response = await csrfFetch(`api/reviews/current`)
+        const response = await csrfFetch(`/api/reviews/current`)
 
         if(response.ok) {
             const reviews = await response.json()
@@ -42,30 +46,36 @@ export const getCurrentReviews = (spots) => async (dispatch) => {
 
 export const getSpotReviews = (spotId) => async (dispatch) => {
     try {
-        const response = await fetch(`api/spots/${spotId}/reviews`);
-
+        const response = await fetch(`/api/spots/${spotId}/reviews`);
+        console.log('response is still going through?====>', response)
+        
         if(response.ok){
             const spotReviews = await response.json()
             dispatch(acGetSpotReviews(spotReviews))
         }
     } catch(error) {
-        const errors = await error.json()
-        return errors;
     }
 }
 
 export const createReviews = (spotId, data, user) => async (dispatch) => {
+    // user is coming through
+    // spotId is coming through
+    // no data is coming through
+    console.log('Data received in createReviews=========>', data);
     try{
-        const response = await csrfFetch(`api/spots/${spotId}/reviews`, {
+        const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify(data)
-        })
+            body: JSON.stringify(data),
+          });
+          console.log('Is the response okay--->', response)
         if(response.ok) {
             const review = await response.json();
+            console.log('Can I see this review data====>', review)
             review.User = user
+            console.log("review going to ac----->", review)
             dispatch(acCreateReviews(review));
             return review;
         }
@@ -77,7 +87,7 @@ export const createReviews = (spotId, data, user) => async (dispatch) => {
 
 export const deleteReviews = (reviewId) => async dispatch => {
     try {
-        const response = await csrfFetch(`api/reviews/${reviewId}`, {
+        const response = await csrfFetch(`/api/reviews/${reviewId}`, {
             method: "DELETE"
         });
 
@@ -115,8 +125,10 @@ export default function reviewsReducer(state = initialState, action) {
             action.singleSpot.Reviews.forEach(element => {
                 newState.singleSpot[element.id] = element
             })
+            console.log('What does this state look like:', newState); 
             return {...newState}
         }
+        // console.log('What is in the new state=======>' newState)
 
         case CREATE_REVIEWS: {
             const newState = {
@@ -125,7 +137,7 @@ export default function reviewsReducer(state = initialState, action) {
                     ...state.singleSpot
                 }
             }
-            delete newState.spot[action.review]
+            newState.singleSpot[action.review.id]=action.review
             return newState
         }
         default:

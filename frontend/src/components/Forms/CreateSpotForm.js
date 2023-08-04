@@ -131,7 +131,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       updatedSpot.id = spot?.id
       dispatch(updateSpot(updatedSpot))
       history.push(`/spots/${spot.id}`)
-      // console.log('updatedSpot==========>', updatedSpot)
+      console.log('updatedSpot==========>', updatedSpot)
     } else {
       const createdSpot = await dispatch(createSpot(updatedSpot));
       console.log('createSpot=======>', createdSpot)

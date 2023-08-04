@@ -1,19 +1,24 @@
 import React from 'react'
-import singleReviewStars from './singleReviewStars';
+import { useSelector } from 'react-redux/es/hooks/useSelector';
 
-const SingleReview = ({ review }) => {
-    const {stars, reviewText, createdAt, user} = review
 
-    const reviewDate = new Date(createdAt).toLocaleDateString();
-
+const SingleReview = () => {
+    // const { user, stars, reviewText } = review
+    // console.log('User:', user);
+    // console.log('Stars:', stars);
+    // console.log('Review Text:', reviewText);
+    // const reviewDate = new Date(createdAt).toLocaleDateString();
+    const spotReviews = useSelector((state) => state.reviews.singleSpot);
+    // console.log('Wonder if I will see it here=======>', spotReviews)
     return (
-        <div className="single-review">
-            <div className="review-header">
-                <singleReviewStars stars={stars}/>
-                <p className="review-date">{reviewDate}</p>
-            </div>
-            <div className="review-text">{reviewText}</div>
-            <div className="review-user">{user.firstName}</div>
+        <div>
+            {Object.values(spotReviews).map((review) => (
+                <div key={review.id} className="single-review">
+                    <p>User: {review.userId}</p>
+                    <p>Stars: {review.stars}</p>
+                    <p>Review: {review.review}</p>
+=                </div>
+            ))}
         </div>
     )
 }

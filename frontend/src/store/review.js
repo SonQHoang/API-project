@@ -125,7 +125,7 @@ export default function reviewsReducer(state = initialState, action) {
             action.singleSpot.Reviews.forEach(element => {
                 newState.singleSpot[element.id] = element
             })
-            console.log('What does this state look like:', newState); 
+            // console.log('What does this state look like:', newState); 
             return {...newState}
         }
         // console.log('What is in the new state=======>' newState)

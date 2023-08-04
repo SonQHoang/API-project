@@ -8,6 +8,7 @@ import './spotDetailsStyles.css';
 import CreateReview from '../Forms/CreateReviewForm';
 import SingleReview from '../ReviewsCRD/singleSpotReview';
 import { getSpotReviews } from '../../store/review';
+import DeleteModal from '../Modals/DeleteSpotModal';
 
 function SpotDetailsPage() {
     const history = useHistory()
@@ -24,9 +25,21 @@ function SpotDetailsPage() {
 
     const isReviewable = 
     user && spot && user.id !== spot.ownerId && ((review) => review.userId === user.Id)
-    // const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedSpotId, setSelectedSpotId] = useState(null)
     console.log(isReviewable)
+
+    const handleDeleteButtonClick = () => {
+        setShowDeleteModal(true);
+      };
+
+      const handleModalClose = () => {
+        setShowDeleteModal(false);
+        setSelectedSpotId(spotId)
+        dispatch(deleteSpot(spotId))
+      };
+
+
 
     useEffect(() => {
         dispatch(getSpotById(spotId))
@@ -39,14 +52,16 @@ function SpotDetailsPage() {
     }, [dispatch,spotId])
     //! useSelector for spotReviews
 
-    const spotReviews = useSelector((state) => state.reviews.spot);
-    console.log('Looking to see what spotReviews looks like=======>', spotReviews)
+    const spotReviews = useSelector((state) => state.reviews.singleSpot);
 
     const handleDelete = (spotId) => {
-        setSelectedSpotId(spotId)
-        // setShowUpdateModal(true)
         dispatch(deleteSpot(spotId))
+        setSelectedSpotId(null)
     }
+
+    if (!spot) {
+        return <div>Spot not found or has been deleted.</div>;
+      }
 
     const handleUpdate = (spotId) => {
         setSelectedSpotId(spotId);
@@ -73,19 +88,23 @@ function SpotDetailsPage() {
                     <p>{`Hosted by Son Hoang`}</p>
                     <p>{`Paragraph: ${spot.description}`}</p>
                 </div>
+                
                 <div className="callout-container">
                     <p className="price">{`$${spotPrice} per night`}</p>
                     <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
                 </div>
             </div>
-            <button onClick={() => handleDelete(spot.id)}>Delete</button>
+            {showDeleteModal && (
+        <DeleteModal onSubmit={handleDelete} onClose={handleModalClose} />
+      )}
+            {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
             <button onClick={() => handleUpdate(spot.id)}>Update</button>
+            <button onClick={handleDeleteButtonClick}>Delete Spot</button>
             <div>
             {<CreateReview spotId={spotId} />}
             </div>
             <div>
-                //!! Come back to this
-                {/* {spotReviews && spotReviews.map((review) => <SingleReview key={review.id} review={review} />) } */}
+            {spotReviews && <SingleReview review={spotReviews} />}
             </div>
         </div>
 

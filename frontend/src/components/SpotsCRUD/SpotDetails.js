@@ -52,8 +52,9 @@ function SpotDetailsPage() {
     }, [dispatch,spotId])
     //! useSelector for spotReviews
 
-    const spotReviews = useSelector((state) => state.reviews.singleSpot);
-
+    const spotReviewsObject = useSelector((state) => state.reviews.singleSpot);
+    const spotReviews = Object.values(spotReviewsObject)
+    console.log('What does spotReviews look like now====>', spotReviews)
     const handleDelete = (spotId) => {
         dispatch(deleteSpot(spotId))
         setSelectedSpotId(null)
@@ -104,7 +105,8 @@ function SpotDetailsPage() {
             {<CreateReview spotId={spotId} />}
             </div>
             <div>
-            {spotReviews && <SingleReview review={spotReviews} />}
+            {spotReviews && spotReviews.map((review) => (
+            <SingleReview key={review.id} review={spotReviews} />))}
             </div>
         </div>
 

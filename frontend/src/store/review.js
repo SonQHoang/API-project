@@ -47,10 +47,11 @@ export const getCurrentReviews = (spots) => async (dispatch) => {
 export const getSpotReviews = (spotId) => async (dispatch) => {
     try {
         const response = await fetch(`/api/spots/${spotId}/reviews`);
-        console.log('response is still going through?====>', response)
+        // console.log('response is still going through?====>', response)
         
         if(response.ok){
             const spotReviews = await response.json()
+            console.log('spotReviews=========>', spotReviews)
             dispatch(acGetSpotReviews(spotReviews))
         }
     } catch(error) {
@@ -86,6 +87,7 @@ export const createReviews = (spotId, data, user) => async (dispatch) => {
 }
 
 export const deleteReviews = (reviewId) => async dispatch => {
+    // console.log('reviewId being sent here====>', reviewId)
     try {
         const response = await csrfFetch(`/api/reviews/${reviewId}`, {
             method: "DELETE"
@@ -122,7 +124,7 @@ export default function reviewsReducer(state = initialState, action) {
             }
 
             newState.singleSpot = {}
-            action.singleSpot.Reviews.forEach(element => {
+            action.spotReviews.Reviews.forEach(element => {
                 newState.singleSpot[element.id] = element
             })
             // console.log('What does this state look like:', newState); 
@@ -139,6 +141,18 @@ export default function reviewsReducer(state = initialState, action) {
             }
             newState.singleSpot[action.review.id]=action.review
             return newState
+        }
+        case DELETE_REVIEWS: {
+            const allReviews = Object.values(state.singleSpot)
+            return {
+                ...state,
+                singleSpot: {
+                    ...state.singleSpot,
+                    reviews: allReviews.filter(
+                        (review) => review.id !== action.reviewId
+                    )
+                }
+            }
         }
         default:
             return state;

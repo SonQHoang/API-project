@@ -4,11 +4,13 @@ import SpotTile from './SpotTile';
 import { getAllSpots } from '../../store/spots';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react'
+import './spotLandingPage.css'
 
 const SpotsLandingPage = () => {
 const dispatch = useDispatch()
 
     const spots = useSelector((state) => Object.values(state.spots.allSpots))
+    const spotReviews = useSelector((state) => state.reviews.singleSpot)
     // const newSpots = Object.values(spots[0])
     // console.log('spots checking this spot=====>', newSpots)
     useEffect(() => {
@@ -18,14 +20,12 @@ const dispatch = useDispatch()
     return (
         <div>
           <h1>Welcome to GuitarBnB</h1>
-          <div className="spot-tile-list">
             {spots.map((spot) => (
-              <div key={spot.id} className="spot-tile-container">
-                <SpotTile spot={spot} />
+                    <div key={spot.id} className="spot-tile-list">
+                    <SpotTile spot={spot} />
               </div>
             ))}
           </div>
-        </div>
       );
     };
 

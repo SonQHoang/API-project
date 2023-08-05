@@ -11,12 +11,6 @@ import SpotDetailsPage from "./components/SpotsCRUD/SpotDetails";
 import GetAllUserSpots from "./components/SpotsCRUD/GetAllUserSpots";
 import SpotsLandingPage from "./components/SpotsCRUD/SpotLandingPage";
 // import CreateReview from "./components/Forms/CreateReviewForm";
-import '@fortawesome/fontawesome-svg-core/styles.css';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
-import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
-
-library.add(solidStar, regularStar);
 
 
 function App() {

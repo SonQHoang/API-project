@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { getUserSpots, deleteSpot } from '../../store/spots';
 import { useEffect, useState } from 'react';
 import SpotTile from './SpotTile';
-// import UpdateSpotModal from '../UpdateSpotModal'
+
 
 function GetAllUserSpots() {
     const history = useHistory();
@@ -34,7 +34,7 @@ function GetAllUserSpots() {
             <h1>Manage Spots</h1>
             {spots.map(spot => (
                     <div key={spot.id} className="spot-tile-list">
-                        <SpotTile spot={spot} className="spot-tile-container"/>
+                        <SpotTile spot={spot} className="spot-tile-holder"/>
                         {/* <h2>{spot.name}</h2>
                         <p>{`Address: ${spot.address}`}</p>
                         <p>{`City: ${spot.city}`}</p>

@@ -23,11 +23,13 @@ const acCreateReviews = (review) => {
     }
 }
 
-
-const acDeleteReviews = (reviewId) => ({
-    type: DELETE_REVIEWS,
-    reviewId
-})
+const acDeleteReviews = (reviewId) => {
+    console.log("What's here in reviewId=====>", reviewId)
+    return {
+        type: DELETE_REVIEWS,
+        reviewId
+    }
+}
 
 
 export const getCurrentReviews = (spots) => async (dispatch) => {
@@ -40,7 +42,7 @@ export const getCurrentReviews = (spots) => async (dispatch) => {
         }
     } catch(error) {
         const errors = await error.json()
-        return errors
+        return errors;
     }
 }
 
@@ -142,18 +144,17 @@ export default function reviewsReducer(state = initialState, action) {
             newState.singleSpot[action.review.id]=action.review
             return newState
         }
+
+        // Since state.reviews.singleSpot is an object with reviewId as a key
         case DELETE_REVIEWS: {
-            const allReviews = Object.values(state.singleSpot)
+            const newSingleSpot = { ...state.singleSpot}
+            delete newSingleSpot[action.reviewId]
             return {
                 ...state,
-                singleSpot: {
-                    ...state.singleSpot,
-                    reviews: allReviews.filter(
-                        (review) => review.id !== action.reviewId
-                    )
-                }
+                singleSpot: newSingleSpot
             }
         }
+    
         default:
             return state;
     }

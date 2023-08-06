@@ -1,28 +1,71 @@
+.spot-tiles-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 20px;
+  /* align-items: flex-start; */
+  /* justify-content: space-evenly; */
+  /* margin: auto;
+  */
+  gap: 20px;
+    /* transition: grid-template-columns 0.3s ease; */
+}
+
+.spot-info-wrapper {
+  padding: 10px;
+}
+.spot-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .spot-image {
-  width: 100%;
-  max-width: 150px;
-  height: auto;
+  width: 300px;
+  height: 250px;
+  /* Fit the size of the container */
+  object-fit: cover;
+  border-radius: 15px 15px 0 0;
+  margin: 0;
 }
 
-.spot-info {
-  font-size: 12px;
+
+/* .spot-info-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
+
+.spot-info-right {
+  display: flex;
+  align-items: center;
+} */
+
 
 .spot-name {
   font-weight: bold;
 }
 
+.spot-tile-container {
+  position: relative;
+  /* Match the size of the image */
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
 .spot-tile-list {
-  /* border: 1px solid #ccc; */
   border-radius: 8px;
   width: 250px;
   margin: 10px;
   display: inline-block;
   vertical-align: top;
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-
 }
+
 .tile {
   width: 200px;
   height: 150px;
@@ -32,7 +75,6 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  cursor: pointer
 }
 .tile::before {
   content: attr(title);
@@ -51,6 +93,35 @@
 }
 
 
+/* 
 
 
 
+
+/* 1 column */
+@media (max-width: 499px) {
+  .spot-tile-list {
+    width: 100%;
+  }
+}
+
+/* 2 columns */
+@media (min-width: 500px) and (max-width: 899px) {
+  .spot-tile-list {
+    width: calc(50% - 20px);
+  }
+}
+
+/* 3 columns */
+@media (min-width: 900px) and (max-width: 1023px) {
+  .spot-tile-list {
+    width: calc(33.33% - 20px);
+  }
+}
+
+/* 4 columns capped */
+@media(min-width: 1024px){
+  .spot-tile-list {
+    width: calc(25% - 20px);
+}
+}

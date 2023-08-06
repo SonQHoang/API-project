@@ -20,7 +20,7 @@ function GetAllSpots() {
     // console.log('How many spots are in here=======?', spots)
 
     return (
-        <>
+        <div className="spot-tiles-wrapper">
             <h1>All Spots</h1>
                 {spots.map(spot => (
                     <div key={spot.id} className="spot-tile-list">
@@ -44,7 +44,7 @@ function GetAllSpots() {
                     onClose={() => setShowUpdateModal(false)}
                 />
             )} */}
-        </>
+        </div>
     )
 }
 

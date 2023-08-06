@@ -1,9 +1,25 @@
-.spot-tile-container {
-border: 1px solid #ccc;
-  border-radius: 8px;
-  width: 250px;
-  margin: 10px;
-  display: inline-block;
-  vertical-align: top;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* .header-container {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  background-color: #fff;
+} */
+
+.header {
+  text-align: left;
+  padding: 10px;
+  font-size: 20px;
+  position: sticky;
+  width: 100%;
+  z-index: 100;
+  font-weight: bold;
+  /* background-color: greenyellow; */
+}
+
+
+.divider-line {
+  border-top: 1px solid #ccc;
+  margin: 10px auto;
+  width: 80%;
+  position: sticky;
 }

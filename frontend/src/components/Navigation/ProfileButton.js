@@ -6,6 +6,7 @@ import LoginFormModal from '../Modals/LoginFormModal'
 import SignupFormModal from '../Modals/SignupFormModal';
 import CreateSpotForm from '../Forms/CreateSpotForm'
 import { useHistory } from 'react-router-dom';
+import './profile-button.css'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={openMenu}>
+      <button className="profile-button" onClick={openMenu}>
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -65,11 +66,11 @@ function ProfileButton({ user }) {
             <li>Hello {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={goToUserSpots}>Manage Spots</button>
+              <button className="profile-button" onClick={goToUserSpots}>Manage Spots</button>
             </li>
 
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button className="profile-button" onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (

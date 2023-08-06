@@ -29,6 +29,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
   const [previewImage3, setPreviewImage3] = useState('')
   const [previewImage4, setPreviewImage4] = useState('')
   const [previewImage5, setPreviewImage5] = useState('')
+  const [largeImageUrl, setLargeImageUrl] = useState("")
 
   const checkFormFilled = () => {
     if (
@@ -76,6 +77,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
     checkFormFilled()
   }, [validationObject, address, city, state, country, name, description, price, previewImage]);
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -117,6 +119,28 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       setIsFormValid(false)
       return;
     }
+    
+        const imageUrlsArray = [];
+    
+        if(isValidImageUrl(previewImage)) {
+          imageUrlsArray.push(previewImage)
+        }
+    
+        if(isValidImageUrl(previewImage2)) {
+          imageUrlsArray.push(previewImage2)
+        }
+    
+        if(isValidImageUrl(previewImage3)) {
+          imageUrlsArray.push(previewImage3)
+        }
+    
+        if(isValidImageUrl(previewImage4)) {
+          imageUrlsArray.push(previewImage4)
+        }
+    
+        if(isValidImageUrl(previewImage5)) {
+          imageUrlsArray.push(previewImage5)
+        }
 
     const updatedSpot = {
       address,
@@ -128,8 +152,10 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       lng,
       description,
       price,
-      previewImageUrl,
-      imageUrls,
+      // previewImageUrl,
+      // imageUrls,
+      // previewImageUrl: imageUrlsArray.length > 0 ? imageUrlsArray[0] : "",
+      // imageUrls: imageUrlsArray,
     };
 
     
@@ -137,10 +163,8 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       updatedSpot.id = spot?.id
       dispatch(updateSpot(updatedSpot))
       history.push(`/spots/${spot.id}`)
-      // console.log('updatedSpot==========>', updatedSpot)
     } else {
       const createdSpot = await dispatch(createSpot(updatedSpot));
-      console.log('createSpot=======>', createdSpot)
       if(previewImage) {
         await dispatch(createSpotImage(createdSpot.id, previewImage))
       }
@@ -173,6 +197,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
         history.push(`/spots/${createdSpot.id}`);
       }
     }
+
   };
   const isValidImageUrl = (url) => {
     return url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png');

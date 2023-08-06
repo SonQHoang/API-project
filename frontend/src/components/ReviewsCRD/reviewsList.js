@@ -1,12 +1,23 @@
 import { useSelector } from "react-redux/es/hooks/useSelector";
+import CreateReview from "../Forms/CreateReviewForm";
+import { useState, useEffect } from "react";
 
 const ReviewList = ({spot, spotReviews}) => {
+  console.log('What does spotReviews look like?======>', spotReviews)
     // const spotReviews = useSelector((state) => state.reviews.singleSpot);
-    console.log('Are there multiple spotReview items?=======>', spotReviews)
+    // console.log('Are there multiple spotReview items?=======>', spotReviews)
     const user = useSelector((state) => state.session.user);
 
-    const reviews = Object.values(spotReviews)
-    .filter((review) => review.spotId === spot.id)
+    const [hideReviewButton, setHideReviewButton] = useState(true);
+
+    useEffect(() => {
+      if(user && spot && spotReviews) {
+        setHideReviewButton(user?.id === spot.ownerId || (spotReviews?.length > 0 && spotReviews?.some(review => review.userId === user?.id)));
+      }
+    },[user,spot, spotReviews])
+
+    const reviews = spotReviews
+    .filter((reviews) => reviews.spotId === spot.id)
     .reverse()
     // const reversedReviews = [...reviews].reverse()
     // console.log('reversedReviews, we are checking the order======>', reversedReviews)
@@ -34,7 +45,9 @@ const ReviewList = ({spot, spotReviews}) => {
         const month = monthNames[date.getMonth()];
         const year = date.getFullYear()
         return `${month} ${year}`
+        
       }
+
 
         return (
             <div>
@@ -52,7 +65,9 @@ const ReviewList = ({spot, spotReviews}) => {
                 <span className="dot">·</span>
               )
             )}
-      
+               {!hideReviewButton && (
+        <CreateReview spotId={spot.id} />
+      )}
             {/* {reviews.length === 0 && user && user.id !== spot.ownerId && (
               <p>Be the first to post a review!</p>
             )} */}

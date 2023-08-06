@@ -62,6 +62,13 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
     }
     checkFormFilled()
   }, [formType, spot])
+  
+  const title = formType === 'UpdateSpot' ? 'Update your Spot' : 'Create a New Spot';
+
+
+  useEffect(() => {
+    console.log("Received formType:", formType);
+  }, [formType]);
 
   useEffect(() => {
     const isValid = Object.keys(validationObject).length === 0;
@@ -105,7 +112,6 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
     }
     setValidationObject(errorsObject);
 
-   
 
     if (Object.keys(errorsObject).length > 0) {
       setIsFormValid(false)
@@ -131,7 +137,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
       updatedSpot.id = spot?.id
       dispatch(updateSpot(updatedSpot))
       history.push(`/spots/${spot.id}`)
-      console.log('updatedSpot==========>', updatedSpot)
+      // console.log('updatedSpot==========>', updatedSpot)
     } else {
       const createdSpot = await dispatch(createSpot(updatedSpot));
       console.log('createSpot=======>', createdSpot)
@@ -174,7 +180,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
   return (
     
     <>
-      <h1>Create a New Spot</h1>
+      <h1>{title}</h1>
       <h2>Where's your place located?</h2>
       <h3>Guests will only get exact address once they have booked a reservation.</h3>
       <form onSubmit={handleSubmit}>
@@ -327,7 +333,7 @@ const CreateSpotsForm = ({ spot, formType, buttonText }) => {
   <p className="errors">Image URL must end in .png, .jpg, or .jpeg</p>
 )}
         <button type="submit" disabled={!formFilled}>
-          {buttonText || "Create Spot"}
+        {buttonText || title}
         </button>
       </form>
     </>

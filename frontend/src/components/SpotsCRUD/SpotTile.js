@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 // Passing these as props from the reviewList file
-const SpotTile = ({ spot, reviewCount }) => {
+const SpotTile = ({ spot, reviewCount, onDeleteButtonClick  }) => {
 
   //Took away reviewCount, it wasn't being used // 
 

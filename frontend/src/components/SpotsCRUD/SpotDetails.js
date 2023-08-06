@@ -101,6 +101,7 @@ function SpotDetailsPage() {
 
                 <div className="callout-container">
                 <div className="review-summary">
+
                     {averageRating !== null ? (
                         <>
                             <i className="fas fa-star"></i>
@@ -126,10 +127,7 @@ function SpotDetailsPage() {
             {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
             {/* <button onClick={() => handleUpdate(spot.id)}>Update</button>
             <button onClick={handleDeleteButtonClick}>Delete Spot</button> */}
-            <div>
-
-                {isReviewable && <CreateReview spotId={spotId} />}
-            </div>
+       
             {/* Our Reviews List info above the list of reviews */}
             <div>
             <ReviewList spot={spot} spotReviews={spotReviews} />

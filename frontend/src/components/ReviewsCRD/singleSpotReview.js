@@ -47,7 +47,7 @@ const SingleReview = ({ review }) => {
       <div className="individual-review-container">
         <div className="review-comment">{review.comment}</div>
 
-        {user && user.id === reviewObject && (
+        {user && user.id === reviewObject.userId && (
           <button onClick={() => setShowDeleteModal(true)}>Delete</button>
         )}
 

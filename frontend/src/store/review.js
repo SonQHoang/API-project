@@ -53,7 +53,7 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
         
         if(response.ok){
             const spotReviews = await response.json()
-            console.log('spotReviews=========>', spotReviews)
+            // console.log('spotReviews=========>', spotReviews)
             dispatch(acGetSpotReviews(spotReviews))
         }
     } catch(error) {
@@ -64,7 +64,7 @@ export const createReviews = (spotId, data, user) => async (dispatch) => {
     // user is coming through
     // spotId is coming through
     // no data is coming through
-    console.log('Data received in createReviews=========>', data);
+    // console.log('Data received in createReviews=========>', data);
     try{
         const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
             method: "POST",

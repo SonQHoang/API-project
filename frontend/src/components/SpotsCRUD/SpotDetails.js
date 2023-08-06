@@ -9,6 +9,7 @@ import CreateReview from '../Forms/CreateReviewForm';
 import SingleReview from '../ReviewsCRD/singleSpotReview';
 import { getSpotReviews } from '../../store/review';
 import DeleteModal from '../Modals/DeleteSpotModal';
+import ReviewList from '../ReviewsCRD/reviewsList';
 
 // ! Helper fxn to help abstract some of avg rating calculations
 function calculateAverageRating(reviews) {
@@ -16,6 +17,7 @@ function calculateAverageRating(reviews) {
     const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
     return (totalStars / reviews.length).toFixed(2)
 }
+
 function SpotDetailsPage() {
     const history = useHistory()
     const dispatch = useDispatch()
@@ -127,6 +129,10 @@ function SpotDetailsPage() {
             <div>
 
                 {isReviewable && <CreateReview spotId={spotId} />}
+            </div>
+            {/* Our Reviews List info above the list of reviews */}
+            <div>
+            <ReviewList spot={spot} spotReviews={spotReviews} />
             </div>
             <div>
                 {spotReviews.length > 0 ? (

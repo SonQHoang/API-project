@@ -44,7 +44,7 @@ const SingleReview = ({ review }) => {
 
   return (
     <>
-      <div className="review-container">
+      <div className="individual-review-container">
         <div className="review-comment">{review.comment}</div>
 
         {user && user.id === reviewObject && (
@@ -53,7 +53,7 @@ const SingleReview = ({ review }) => {
 
         {Object.values(spotReviews).map((review) => (
           <div key={review.id} className="single-review">
-            <p>Reviewer: {review.User.firstName}</p>
+            <p>{review.User.firstName}</p>
             <p>{formatDate(review.createdAt)}</p>
             {/* <p>Stars: {review.stars}</p> */}
             <p>{review.review}</p>

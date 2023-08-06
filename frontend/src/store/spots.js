@@ -37,6 +37,7 @@ const acCreateSpotImages = (spotImages) => {
 }
 
 const acGetAllSpots = (spots) => {
+  console.log('How many spots are in acGetAllspots===>', spots)
   return {
     type: GET_ALL_SPOTS,
     spots,
@@ -113,6 +114,7 @@ export const getAllSpots = () => async (dispatch) => {
     const response = await fetch(`/api/spots`);
     if (response.ok) {
       const data = await response.json()
+      console.log('What does this data contain?====>', data)
       const spots = data.Spots
       dispatch(acGetAllSpots(spots))
     }

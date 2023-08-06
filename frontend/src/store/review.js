@@ -73,18 +73,21 @@ export const createReviews = (spotId, data, user) => async (dispatch) => {
             },
             body: JSON.stringify(data),
           });
-          console.log('Is the response okay--->', response)
+          
+        //   console.log('Is the response okay--->', response)
         if(response.ok) {
             const review = await response.json();
-            console.log('Can I see this review data====>', review)
+            // console.log('Can I see this review data====>', review)
             review.User = user
-            console.log("review going to ac----->", review)
+            // console.log("review going to ac----->", review)
             dispatch(acCreateReviews(review));
             return review;
+        // } else {
+        //     const data = await response.json();
+        //     throw new Error(data.message)
         }
     } catch (error) {
-        const errors = await error.json()
-        return errors;
+        throw error;       
     }
 }
 

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
-const ReviewList = ({spot}) => {
-    const spotReviews = useSelector((state) => state.reviews.singleSpot);
+const ReviewList = ({spot, spotReviews}) => {
+    // const spotReviews = useSelector((state) => state.reviews.singleSpot);
     console.log('Are there multiple spotReview items?=======>', spotReviews)
     const user = useSelector((state) => state.session.user);
 
@@ -11,9 +11,16 @@ const ReviewList = ({spot}) => {
     // const reversedReviews = [...reviews].reverse()
     // console.log('reversedReviews, we are checking the order======>', reversedReviews)
 
-    if(reviews.length === 0 && user && user.id !== spot.ownerId) {
-        return <p>Be the first to post a review!</p>
-    }
+
+    //Calculating averageRating
+    
+    const calculateAverageRating = () => {
+        if (reviews.length === 0) return null;
+        const totalRating = reviews.reduce((sum, review) => sum + review.stars, 0);
+        return totalRating / reviews.length;
+      };
+    
+      const averageRating = calculateAverageRating();
 
     // Formatting the date so I can use the date in order to indicate the order of the reivews
 
@@ -30,15 +37,37 @@ const ReviewList = ({spot}) => {
       }
 
         return (
+            <div>
+            {averageRating !== null ? (
+              <div className="rating-section">
+                <i className="fas fa-star"></i>
+                {averageRating.toFixed(1)}
+                {reviews.length > 0 && <span className="dot">·</span>}
+                <span className="review-count">
+                  {reviews.length} Review{reviews.length > 1 ? 's' : ''}
+                </span>
+              </div>
+            ) : (
+              reviews.length > 0 && (
+                <span className="dot">·</span>
+              )
+            )}
+      
+            {/* {reviews.length === 0 && user && user.id !== spot.ownerId && (
+              <p>Be the first to post a review!</p>
+            )} */}
+
             <div className="review-list">
                 {reviews.map((review) => (
                     <div key={review.id} className="review-item">
-                        <p>User: {review.userId}</p>
+                        {/* <p>User: {review.userId}</p>
                         <p>Month Year: {formatDate(review.createdAt)}</p>
-                        <p>Review: {review.review}</p>
+                        <p>Review: {review.review}</p> */}
                 </div>
                 ))}
             </div>
+            </div>
+
         )
     }
 

@@ -17,6 +17,7 @@ function GetAllSpots() {
 
     const spots = useSelector(state => Object.values(state.spots.allSpots)
     );
+    // console.log('How many spots are in here=======?', spots)
 
     return (
         <>

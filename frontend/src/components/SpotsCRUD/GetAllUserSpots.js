@@ -29,6 +29,7 @@ function GetAllUserSpots() {
         history.push(`/spots/${spotId}/update`)
     }
 
+    if(spots.length > 0) {
     return (
         <>
             <h1>Manage Spots</h1>
@@ -46,14 +47,23 @@ function GetAllUserSpots() {
                     </div>
                 
             ))}
-            {/* {showUpdateModal && (
+        </>
+    )
+} else {
+    return (
+        <>
+        <h2>Create your first spot now!</h2>
+        <button onClick={() => history.push('/spots/new')}>Create a New Spot</button>
+        </>
+    )
+}
+}
+
+export default GetAllUserSpots
+
+       {/* {showUpdateModal && (
                 <UpdateSpotModal
                     spotId={selectedSpotId}
                     onClose={() => setShowUpdateModal(false)}
                 />
             )} */}
-        </>
-    )
-}
-
-export default GetAllUserSpots

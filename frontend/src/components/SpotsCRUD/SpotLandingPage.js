@@ -10,6 +10,7 @@ const SpotsLandingPage = () => {
 const dispatch = useDispatch()
 
     const spots = useSelector((state) => Object.values(state.spots.allSpots))
+    console.log('How many spots are there?=======>', spots)
     const spotReviews = useSelector((state) => state.reviews.singleSpot)
     // const newSpots = Object.values(spots[0])
     // console.log('spots checking this spot=====>', newSpots)

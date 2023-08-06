@@ -1,25 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ReviewModal.css';
 
-const ReviewModal = ({ onSubmit }) => {
+const ReviewModal = ({ onSubmit, onClose, serverError, clearServerError }) => {
+  // console.log('Received error', serverError)
+  // console.log('serverError ============>', serverError)
   const [review, setReview] = useState('');
   const [stars, setStars] = useState(0);
-
-  const handleSubmit = (e) => {
+  const [serverErrorLocal, setServerErrorLocal] = useState(null);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Review:', review);
-    console.log('Stars:', stars);
-    console.log('Can I test this way===>', { review, stars });
-    onSubmit({ review, stars });
-    setReview('');
-    setStars(0);
+    // console.log('Review:', review);
+    // console.log('Stars:', stars);
+    // console.log('Can I test this way===>', { review, stars });
+    
+      await onSubmit({ review, stars });
+      setReview('');
+      setStars(0);
+      // setServerError(null)
+      // setServerError(error.message)
+      // console.log('serverError ============>', serverError)
+  
   };
 
   //! Need to fix this overlay later
   const modalOverlayRef = useRef();
 
   const handleClickOutside = (e) => {
-    if (modalOverlayRef.current === e.target) {
+    if (modalOverlayRef.current && !modalOverlayRef.current.contains(e.target)) {
+      onClose()
+      clearServerError()
       onSubmit({ review, stars });
       setReview('');
     }
@@ -60,6 +69,9 @@ const ReviewModal = ({ onSubmit }) => {
         <div>
           <h2>How was your stay?</h2>
         </div>
+            {serverError && <p className="error-message">{serverError}</p>}
+        <div>
+        </div>
         <div>
           <form onSubmit={handleSubmit}>
             <textarea
@@ -71,7 +83,7 @@ const ReviewModal = ({ onSubmit }) => {
             <div>
               <label>
                 <div className="stars-container">{renderStars()}</div>
-                <span className="stars-label">Stars</span>
+                <span className="stars-label"></span>
               </label>
             </div>
             <div>
@@ -82,7 +94,7 @@ const ReviewModal = ({ onSubmit }) => {
           </form>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 

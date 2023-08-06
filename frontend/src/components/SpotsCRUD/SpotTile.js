@@ -3,7 +3,10 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 // Passing these as props from the reviewList file
 const SpotTile = ({ spot, reviewCount }) => {
-  console.log('spot=======>', spot)
+
+  //Took away reviewCount, it wasn't being used // 
+
+  // console.log('spot=======>', spot)
   // console.log('reviewCount=======>', reviewCount)
   // console.log('averageRating=======>', averageRating)
   const history = useHistory()
@@ -22,14 +25,14 @@ const SpotTile = ({ spot, reviewCount }) => {
 
           {spot.avgRating !== null ? (
             <>
-              {spot.avgRating}
-              {reviewCount > 0 && <span className="dot">·</span>}
+              {spot.avgRating?.toFixed(2)}
+              {/* {reviewCount > 0 && <span className="dot">·</span>} */}
             </>
           ) : (
             "New"
             )}
 
-          {reviewCount > 0 && <span className="review-count">{reviewCount} Review{reviewCount > 1 ? 's' : ''}</span>}
+          {/* {reviewCount > 0 && <span className="review-count">{reviewCount} Review{reviewCount > 1 ? 's' : ''}</span>} */}
         </div>
         <p className="spot-price">{`$${spot.price} per night`}</p>
       </div>

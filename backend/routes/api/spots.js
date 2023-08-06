@@ -134,10 +134,11 @@ const properBookingDates = (req, res, next) => {
 
 router.get('/', spotQueryFilter, async (req, res) => {
 
-    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    // let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
 
-    page = page === undefined ? 1 : parseInt(page);
-    size = size === undefined ? 20 : parseInt(size);
+    // page = page === undefined ? 1 : parseInt(page);
+    // size = size === undefined ? 20 : parseInt(size);
 
     // spot filter
 
@@ -148,10 +149,10 @@ router.get('/', spotQueryFilter, async (req, res) => {
 
 
     const spots = await Spot.findAll({
-        include: [{ model: Review }, { model: SpotImage, attributes: ['url'] }],
-        where,
-        limit: size,
-        offset: size * (page - 1),
+        include: [{ model: Review }, { model: SpotImage, attributes: ['url'] }]
+        // where,
+        // limit: size,
+        // offset: size * (page - 1),
     });
 
     let spotRating = spots.map((spot) => {
@@ -195,7 +196,7 @@ router.get('/', spotQueryFilter, async (req, res) => {
             avgRating: spot.avgRating,
             previewImage: spot.previewImage,
         })),
-        page, size
+        // page, size
     }
     res.json(response)
 })

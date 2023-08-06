@@ -12,7 +12,8 @@ const CreateReview = () => {
 
     const [review, setReview] = useState("");
     const [stars, setStars] = useState("")
-    const [error, setErrors] = useState({})
+    // const [error, setErrors] = useState({})
+    const [serverError, setServerError] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const spot = useSelector(state => state.spots[spotId])
@@ -23,14 +24,27 @@ const CreateReview = () => {
     }, [dispatch, spotId])
 
     const handleReviewSubmit = async (reviewData) => {
-        // console.log('reviewData======>', reviewData)
+      // console.log('reviewData======>', reviewData)
+      try {
         setReview(reviewData.review)
         setStars(reviewData.stars)
-        await dispatch(createReviews(spotId, reviewData, user))
+        const response = await dispatch(createReviews(spotId, reviewData, user))
+        console.log('Checking out the response =====>', response)
         setIsModalOpen(false)
         
-        setErrors({})
         setReview("")
+      } catch (error) {
+        if (error.response) {
+          setServerError(null);
+        } else {
+          // Hard coding this, but need to figure out later how to make it dynamic
+          setServerError(`You've already posted a review for this spot`);
+        }
+      }
+    }
+
+    const clearServerError = () => {
+      setServerError(null)
     }
 
     const handleModalOpen = () => {
@@ -39,7 +53,7 @@ const CreateReview = () => {
 
     const handleModalClose = () => {
         setIsModalOpen(false);
-        setErrors({});
+        // setErrors({});
         setReview("")
     }
 
@@ -65,7 +79,7 @@ const CreateReview = () => {
         {isModalOpen && (
           <div className="create-review-overlay">
             <div className="create-review-content">
-              <ReviewModal onSubmit={handleReviewSubmit} onClose={handleModalClose} />
+              <ReviewModal onSubmit={handleReviewSubmit} onClose={handleModalClose} serverError={serverError} clearServerError={clearServerError} />
             </div>
           </div>
         )}

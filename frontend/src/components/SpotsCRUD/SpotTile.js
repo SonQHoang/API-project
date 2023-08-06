@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import './spotTile.css'
 
 // Passing these as props from the reviewList file
 const SpotTile = ({ spot, reviewCount, onDeleteButtonClick  }) => {
@@ -13,7 +14,7 @@ const SpotTile = ({ spot, reviewCount, onDeleteButtonClick  }) => {
 
   return (
     <div onClick={() => { history.push(`/spots/${spot.id}`) }} className="spot-tile-list">
-      <div key={spot.id} className="spot-tile-container">
+      <div key={spot.id} className="spot-tile-container" title={spot.name}>
         <img src={spot.previewImage} className="spot-image" alt="Logo" />
         <div className="spot-info">
           <p className="spot-city">{spot.city}</p>

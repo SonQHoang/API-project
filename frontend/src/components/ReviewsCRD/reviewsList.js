@@ -3,22 +3,29 @@ import CreateReview from "../Forms/CreateReviewForm";
 import { useState, useEffect } from "react";
 
 const ReviewList = ({spot, spotReviews}) => {
-  console.log('What does spotReviews look like?======>', spotReviews)
+  // console.log('What does spotReviews look like?======>', spotReviews)
     // const spotReviews = useSelector((state) => state.reviews.singleSpot);
     // console.log('Are there multiple spotReview items?=======>', spotReviews)
     const user = useSelector((state) => state.session.user);
 
+    const [reviews, setReviews] = useState([])
     const [hideReviewButton, setHideReviewButton] = useState(true);
 
     useEffect(() => {
-      if(user && spot && spotReviews) {
-        setHideReviewButton(user?.id === spot.ownerId || (spotReviews?.length > 0 && spotReviews?.some(review => review.userId === user?.id)));
-      }
-    },[user,spot, spotReviews])
+      const updatedReviews = spotReviews
+      const reviews = spotReviews
+      .slice()
+      .reverse()
+      .filter((review ) => review .spotId === spot.id)
+      setReviews(updatedReviews)
+    }, [spotReviews, spot.id])
 
-    const reviews = spotReviews
-    .filter((reviews) => reviews.spotId === spot.id)
-    .reverse()
+    useEffect(() => {
+      if(user && spot && reviews) {
+        setHideReviewButton(user?.id === spot.ownerId || (reviews?.length > 0 && reviews?.some(review => review.userId === user?.id)));
+      }
+    },[user,spot, reviews])
+
     // const reversedReviews = [...reviews].reverse()
     // console.log('reversedReviews, we are checking the order======>', reversedReviews)
 
@@ -48,13 +55,17 @@ const ReviewList = ({spot, spotReviews}) => {
         
       }
 
+      // console.log("spot:", spot);
+      // console.log("spotReviews:", spotReviews);
+      // console.log("reviews:", reviews);
+    
 
         return (
             <div>
             {averageRating !== null ? (
               <div className="rating-section">
                 <i className="fas fa-star"></i>
-                {averageRating.toFixed(1)}
+                {averageRating.toFixed(2)}
                 {reviews.length > 0 && <span className="dot">·</span>}
                 <span className="review-count">
                   {reviews.length} Review{reviews.length > 1 ? 's' : ''}
@@ -75,9 +86,9 @@ const ReviewList = ({spot, spotReviews}) => {
             <div className="review-list">
                 {reviews.map((review) => (
                     <div key={review.id} className="review-item">
-                        {/* <p>User: {review.userId}</p>
-                        <p>Month Year: {formatDate(review.createdAt)}</p>
-                        <p>Review: {review.review}</p> */}
+                        {/* <p>User: {review.userId}</p> */}
+                        {/* <p>{formatDate(review.createdAt)}</p> */}
+                        {/* <p>Review: {review.review}</p> */}
                 </div>
                 ))}
             </div>
@@ -85,5 +96,4 @@ const ReviewList = ({spot, spotReviews}) => {
 
         )
     }
-
     export default ReviewList

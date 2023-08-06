@@ -38,7 +38,7 @@ function SpotDetailsPage() {
         user && spot && user.id !== spot.ownerId && ((review) => review.userId === user.Id)
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedSpotId, setSelectedSpotId] = useState(null)
-    console.log(isReviewable)
+    // console.log(isReviewable)
 
     const handleDeleteButtonClick = () => {
         setShowDeleteModal(true);
@@ -79,6 +79,7 @@ function SpotDetailsPage() {
         // setShowUpdateModal(true)
     }
 
+    // Fake3      User      FakeUser3    FakeUser3@gmail.com 
     return (
         <div>
             <h2>{`${spot.name}`}</h2>

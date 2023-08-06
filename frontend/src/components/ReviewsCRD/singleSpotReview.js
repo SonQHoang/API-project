@@ -5,12 +5,14 @@ import { deleteReviews } from '../../store/review';
 import DeleteModal from '../Modals/DeleteSpotModal';
 
 const SingleReview = ({ review }) => {
-  const reviewObject = review;
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dispatch = useDispatch();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const reviewObject = review;
+  
   const user = useSelector((state) => state.session.user);
   const spotReviews = useSelector((state) => state.reviews.singleSpot);
 
+  const reversedReviews = Object.values(spotReviews).reverse()
   // Add state to capture new review and star rating
   const [newReview, setNewReview] = useState('');
   const [newStars, setNewStars] = useState(0);
@@ -51,7 +53,7 @@ const SingleReview = ({ review }) => {
           <button onClick={() => setShowDeleteModal(true)}>Delete</button>
         )}
 
-        {Object.values(spotReviews).map((review) => (
+        {Object.values(reversedReviews).map((review) => (
           <div key={review.id} className="single-review">
             <p>{review.User.firstName}</p>
             <p>{formatDate(review.createdAt)}</p>

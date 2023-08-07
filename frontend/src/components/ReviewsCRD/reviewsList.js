@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import './reviewList.css'
 
 const ReviewList = ({spot, spotReviews}) => {
-  // console.log('What does spotReviews look like?======>', spotReviews)
+  console.log('What does spotReviews look like?======>', spotReviews)
     // const spotReviews = useSelector((state) => state.reviews.singleSpot);
     // console.log('Are there multiple spotReview items?=======>', spotReviews)
     const user = useSelector((state) => state.session.user);
@@ -81,6 +81,7 @@ const ReviewList = ({spot, spotReviews}) => {
                {!hideReviewButton && (
         <CreateReview spotId={spot.id} />
       )}
+      
             {/* {reviews.length === 0 && user && user.id !== spot.ownerId && (
               <p>Be the first to post a review!</p>
             )} */}

@@ -9,7 +9,7 @@ const SingleReview = ({ review }) => {
   const dispatch = useDispatch();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const reviewObject = review;
-  
+
   const user = useSelector((state) => state.session.user);
   const spotReviews = useSelector((state) => state.reviews.singleSpot);
 
@@ -38,7 +38,7 @@ const SingleReview = ({ review }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+      'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
     ]
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear()
@@ -48,24 +48,23 @@ const SingleReview = ({ review }) => {
   return (
     <>
       <div className="review-list-horizontal-line">
+
         <div className="review-comment">{review.comment}</div>
 
-        {user && user.id === reviewObject.userId && (
-          <button onClick={() => setShowDeleteModal(true)}>Delete</button>
-        )}
-
         {Object.values(reversedReviews).map((review) => (
-          <div key={review.id} className="single-review">
-            <p>{review.User.firstName}</p>
-            <p>{formatDate(review.createdAt)}</p>
-            {/* <p>Stars: {review.stars}</p> */}
-            <p>{review.review}</p>
-          </div>
-        ))}
+  <div key={review.id} className="single-review">
+    <p>{review.User.firstName}</p>
+    <p>{formatDate(review.createdAt)}</p>
+    <p>{review.review}</p>
+    {user && user.id === review.userId && (
+      <button onClick={() => setShowDeleteModal(true)}>Delete</button>
+    )}
+    {showDeleteModal && review.id === reviewObject.id && (
+      <DeleteModal onSubmit={handleDeleteReview} onClose={() => setShowDeleteModal(false)} isReview={true} />
+    )}
+  </div>
+))}
 
-        {showDeleteModal && (
-          <DeleteModal onSubmit={handleDeleteReview} onClose={() => setShowDeleteModal(false)} isReview={true} />
-        )}
 
         {/* {user && (
           <form onSubmit={handleSubmitReview}>
@@ -95,6 +94,7 @@ const SingleReview = ({ review }) => {
             </div>
           </form>
         )} */}
+
       </div>
     </>
   );

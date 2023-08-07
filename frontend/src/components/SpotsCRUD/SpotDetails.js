@@ -81,7 +81,6 @@ function SpotDetailsPage() {
         // setShowUpdateModal(true)
     }
 
-    // Fake3      User      FakeUser3    FakeUser3@gmail.com 
     return (
         <>
             <div className="horizontal-Line"></div>
@@ -112,54 +111,73 @@ function SpotDetailsPage() {
                             <p>{`${spot.description}`}</p>
                         </div>
                     </div>
-                    <div class="call-out-wrapper">
+                    <div className="call-out-wrapper">
                         <div className="callout-container">
                             <div className="review-summary">
-                                <p className="price">{`$${spotPrice} night`}</p>
-                                <div className="review-details">
-                                    {averageRating !== null && (
-                                        <>
-                                            <i className="fas fa-star"></i>
-                                            <span>{averageRating}</span>
-                                            <span className="dot">·</span>
-                                        </>
+                                <div className='review-summary-container'>
+                                    {spot.numReviews === 0 ? (
+                                        <i className="fas fa-star"></i>
+                                    ) : (
+                                        <i className="fas fa-star"></i>
                                     )}
-                                    {spotReviews.length > 0 && (
-                                        <span className="review-count">
-                                            {spotReviews.length} Review{spotReviews.length > 1 ? 's' : ""}
+                                    {spot.numReviews === 1 ? (
+                                        <span>
+                                            {` ${averageRating}    ·   ${spot.numReviews} review`}
+                                        </span>
+                                    ) : spot.numReviews === 0 ? (
+                                        <span>New</span>
+                                    ) : (
+                                        <span>
+                                            {` ${averageRating} · ${spot.numReviews} reviews`}
                                         </span>
                                     )}
                                 </div>
+                                <div className="price-container">
+                                    <p className="spot-price">${spotPrice} per night</p>
+                                </div>
                             </div>
                             <div className="reserve-button-container">
-                                <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+                                <button className="reserve-button" onClick={handleReserveClick}>
+                                    Reserve
+                                </button>
                             </div>
                         </div>
                     </div>
+
                 </div>
-            {showDeleteModal && (
-                <DeleteModal onSubmit={handleDelete} onClose={handleModalClose} />
-            )}
-            {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
-            {/* <button onClick={() => handleUpdate(spot.id)}>Update</button>
+                {showDeleteModal && (
+                    <DeleteModal onSubmit={handleDelete} onClose={handleModalClose} />
+                )}
+                {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
+                {/* <button onClick={() => handleUpdate(spot.id)}>Update</button>
             <button onClick={handleDeleteButtonClick}>Delete Spot</button> */}
 
-            {/* Our Reviews List info above the list of reviews */}
+                {/* Our Reviews List info above the list of reviews */}
 
-            <div className="horizontal-line-review-list">
-                <ReviewList spot={spot} spotReviews={spotReviews} />
-            </div>
-            <div>
-                {spotReviews.length > 0 ? (
-                    spotReviews.map((review) => <SingleReview key={review.id} review={review} />)
-                ) : (
-                    <div>Be the first to post a review!</div>
-                )}
-            </div>
+                <div className="horizontal-line-review-list">
+                    <ReviewList spot={spot} spotReviews={spotReviews} />
+                </div>
+                <div>
+                    {spotReviews.length > 0 ? (
+                        spotReviews.map((review) => (
+                            <SingleReview key={review.id} review={review} />
+                        ))
+                    ) : (
+                        <div>
+                            {spot.numReviews === 0 ? (
+                                <span>
+                                    <i className="fas fa-star"></i>
+                                    New
+                                </span>
+                            ) : (
+                                <span>Be the first to post a review!</span>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </>
-
-    )
+    );
 }
 
 export default SpotDetailsPage

@@ -1,14 +1,12 @@
 .spot-tiles-wrapper {
   display: flex;
+  /* column-gap: 15px; */
   flex-wrap: wrap;
-  justify-content: center;
-  padding-top: 20px;
-  /* align-items: flex-start; */
-  /* justify-content: space-evenly; */
-  /* margin: auto;
-  */
-  gap: 20px;
-    /* transition: grid-template-columns 0.3s ease; */
+  justify-content: space-evenly;
+  gap: 15px;
+  margin: auto;
+  padding: 30px;
+  justify-content: flex-start;
 }
 
 .spot-info-wrapper {
@@ -30,18 +28,6 @@
 }
 
 
-/* .spot-info-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.spot-info-right {
-  display: flex;
-  align-items: center;
-} */
-
-
 .spot-name {
   font-weight: bold;
 }
@@ -59,11 +45,11 @@
 }
 
 .spot-tile-list {
-  border-radius: 8px;
-  width: 250px;
-  margin: 10px;
-  display: inline-block;
-  vertical-align: top;
+  position: relative;
+  display: flex;
+  flex-wrap:wrap;
+  flex-direction:column;
+  cursor:pointer;
 }
 
 .tile {
@@ -93,35 +79,21 @@
 }
 
 
-/* 
 
-
-
-
-/* 1 column */
 @media (max-width: 499px) {
-  .spot-tile-list {
+  .spot-tiles-wrapper {
     width: 100%;
   }
 }
 
-/* 2 columns */
-@media (min-width: 500px) and (max-width: 899px) {
-  .spot-tile-list {
-    width: calc(50% - 20px);
-  }
-}
-
-/* 3 columns */
 @media (min-width: 900px) and (max-width: 1023px) {
   .spot-tile-list {
-    width: calc(33.33% - 20px);
+    width: calc(33.33% - 20px); /* Three columns with a gap */
   }
 }
 
-/* 4 columns capped */
-@media(min-width: 1024px){
+@media (min-width: 1024px) {
   .spot-tile-list {
-    width: calc(25% - 20px);
-}
+    width: calc(25% - 20px); /* Four columns with a gap */
+  }
 }

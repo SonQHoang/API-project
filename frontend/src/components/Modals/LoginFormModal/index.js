@@ -3,12 +3,15 @@ import * as sessionActions from "../../../store/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../../context/Modal";
 import { useHistory } from 'react-router-dom';
+import { useEffect } from "react";
 import "./LoginForm.css";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
+//   console.log("Initial credential:", credential);
+// console.log("Initial password:", password);
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
   const history = useHistory()
@@ -18,6 +21,7 @@ function LoginFormModal() {
       e.preventDefault();
     }
     setErrors({});
+    // console.log("Logging in with credentials: ======>", credential, password);
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
@@ -34,11 +38,18 @@ function LoginFormModal() {
     disable = false
   }
 
-  const handleDemoLogin = () => {
+  const handleDemoLogin = async () => {
     setCredential('FakeUser1');
     setPassword("password2");
-    handleSubmit()
+    console.log("Attempting demo login");
+    await handleSubmit()
   }
+
+  useEffect(() => {
+    if(credential === "FakeUser1" && password === "password2") {
+      handleSubmit()
+    }
+  }, [credential, password])
 
   return (
     <>

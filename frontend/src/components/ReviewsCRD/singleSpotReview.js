@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createReviews } from '../../store/review';
 import { deleteReviews } from '../../store/review';
 import DeleteModal from '../Modals/DeleteSpotModal';
+import './singleSpotReview.css'
 
 const SingleReview = ({ review }) => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const SingleReview = ({ review }) => {
 
   return (
     <>
-      <div className="individual-review-container">
+      <div className="review-list-horizontal-line">
         <div className="review-comment">{review.comment}</div>
 
         {user && user.id === reviewObject.userId && (

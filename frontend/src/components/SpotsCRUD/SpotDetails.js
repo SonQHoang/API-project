@@ -92,63 +92,70 @@ function SpotDetailsPage() {
                 </div>
                 <div className="image-wrapper">
                     <div className='large-image-container'>
-                        {spot.SpotImages && <img 
-                        className="large-image" 
-                        src={spot.SpotImages[0].url} 
-                        alt="Guitar" />}
+                        {spot.SpotImages && <img
+                            className="large-image"
+                            src={spot.SpotImages[0].url}
+                            alt="Guitar" />}
                     </div>
                     <div className="small-images-container">
-                        {spot.SpotImages && spot.SpotImages.slice(1,5).map((image, index) => (
+                        {spot.SpotImages && spot.SpotImages.slice(1, 5).map((image, index) => (
                             <img key={index} className="small-image" src={image.url} alt={`Small Image Preview ${index + 1}`} />
                         ))}
                     </div>
                 </div>
                 <div className="host-details-reserve-container">
-                    <div>
-                        <p>{`Hosted by Son Hoang`}</p>
-                        <p>{`Paragraph: ${spot.description}`}</p>
-                    </div>
-
-                    <div className="callout-container">
-                        <div className="review-summary">
-
-                            {averageRating !== null ? (
-                                <>
-                                    <i className="fas fa-star"></i>
-                                    {averageRating}
-                                    {spotReviews.length > 0 && <span className="dot">·</span>}
-                                </>
-                            ) : (
-                                spotReviews.length > 0 && <span className="dot">·</span>
-                            )}
-                            {spotReviews.length > 0 && (
-                                <span className="review-count">
-                                    {spotReviews.length} Review{spotReviews.length > 1 ? 's' : ""}
-                                </span>
-                            )}
-                            <p className="price">{`$${spotPrice} per night`}</p>
+                    <div className="host-spot-wrapper">
+                        <div className="host-info">
+                            <p>{`Hosted by Son Hoang`}</p>
                         </div>
-                        <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+                        <div>
+                            <p>{`${spot.description}`}</p>
+                        </div>
+                    </div>
+                    <div class="call-out-wrapper">
+                        <div className="callout-container">
+                            <div className="review-summary">
+                                <p className="price">{`$${spotPrice} night`}</p>
+                                <div className="review-details">
+                                    {averageRating !== null && (
+                                        <>
+                                            <i className="fas fa-star"></i>
+                                            <span>{averageRating}</span>
+                                            <span className="dot">·</span>
+                                        </>
+                                    )}
+                                    {spotReviews.length > 0 && (
+                                        <span className="review-count">
+                                            {spotReviews.length} Review{spotReviews.length > 1 ? 's' : ""}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="reserve-button-container">
+                                <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {showDeleteModal && (
-                    <DeleteModal onSubmit={handleDelete} onClose={handleModalClose} />
-                )}
-                {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
-                {/* <button onClick={() => handleUpdate(spot.id)}>Update</button>
+            {showDeleteModal && (
+                <DeleteModal onSubmit={handleDelete} onClose={handleModalClose} />
+            )}
+            {/* <button onClick={() => handleDelete(spot.id)}>Delete</button> */}
+            {/* <button onClick={() => handleUpdate(spot.id)}>Update</button>
             <button onClick={handleDeleteButtonClick}>Delete Spot</button> */}
 
-                {/* Our Reviews List info above the list of reviews */}
-                <div>
-                    <ReviewList spot={spot} spotReviews={spotReviews} />
-                </div>
-                <div>
-                    {spotReviews.length > 0 ? (
-                        spotReviews.map((review) => <SingleReview key={review.id} review={review} />)
-                    ) : (
-                        <div>Be the first to post a review!</div>
-                    )}
-                </div>
+            {/* Our Reviews List info above the list of reviews */}
+
+            <div className="horizontal-line-review-list">
+                <ReviewList spot={spot} spotReviews={spotReviews} />
+            </div>
+            <div>
+                {spotReviews.length > 0 ? (
+                    spotReviews.map((review) => <SingleReview key={review.id} review={review} />)
+                ) : (
+                    <div>Be the first to post a review!</div>
+                )}
+            </div>
             </div>
         </>
 

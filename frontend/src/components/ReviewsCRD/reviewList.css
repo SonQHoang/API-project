@@ -1,0 +1,10 @@
+/* .review-list-horizontal-line {
+    border-top: 1px solid #ccc;
+    width: 100%;
+    margin-top: 15px;
+} */
+
+.review-list-wrapper {
+    border-top: solid black 2px;
+    padding-top: 10px;
+}

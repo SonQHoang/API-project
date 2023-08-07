@@ -11,7 +11,7 @@ function Navigation({ isLoaded }) {
     <div className="navigation-container">
       <div className="logo-container">
         <Link to="/">
-          <img src="https://www.digital.ink/wp-content/uploads/airbnb_logo_detail.jpg"
+          <img src="https://res.cloudinary.com/dgxpqnbwn/image/upload/v1691392577/Guitar_BnB_fw7zb0.png"
             alt="Logo" className="logo-img" />
         </Link>
       </div>

@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import CreateReview from "../Forms/CreateReviewForm";
 import { useState, useEffect } from "react";
+import './reviewList.css'
 
 const ReviewList = ({spot, spotReviews}) => {
   // console.log('What does spotReviews look like?======>', spotReviews)
@@ -61,7 +62,8 @@ const ReviewList = ({spot, spotReviews}) => {
     
 
         return (
-            <div>
+          <div className="review-list-wrapper">
+            <div >
             {averageRating !== null ? (
               <div className="rating-section">
                 <i className="fas fa-star"></i>
@@ -93,7 +95,7 @@ const ReviewList = ({spot, spotReviews}) => {
                 ))}
             </div>
             </div>
-
+            </div>
         )
     }
     export default ReviewList

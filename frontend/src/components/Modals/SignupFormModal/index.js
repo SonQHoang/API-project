@@ -43,9 +43,12 @@ function SignupFormModal() {
           const data = await res.json();
           if (data && data.errors) {
             setErrors(data.errors);
+            console.log("Errors==========>", data.errors)
           }
         });
     }
+    console.log("errors========>", errors)
+    console.log("Disable button=====>", disable)
     return setErrors({
       confirmPassword:
         "Confirm Password field must be the same as the Password field",
@@ -54,28 +57,10 @@ function SignupFormModal() {
 
   return (
     <>
+    <div className="sign-up-wrapper">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        {errors.username && <p>{errors.username}</p>}
+      <div className="form-field">
         <label>
           First Name
           <input
@@ -85,7 +70,11 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        </div>
+
+        {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+        <div className="form-field">
+
         <label>
           Last Name
           <input
@@ -95,7 +84,38 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        </div>
+        {errors.lastName && <p className="error-message">{errors.lastName}</p>}
+        <div className="form-field">
+
+        <label>
+          Email
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+        </div>
+
+        {errors.email && <p className="error-message">{errors.email}</p>}
+        <div className="form-field">
+
+        <label>
+          Username
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </label>
+        </div>
+
+        {errors.username && <p className="error-message">{errors.username}</p>}
+        <div className="form-field">
+
         <label>
           Password
           <input
@@ -105,7 +125,11 @@ function SignupFormModal() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        </div>
+
+        {errors.password && <p className="error-message">{errors.password}</p>}
+        <div className="form-field">
+
         <label>
           Confirm Password
           <input
@@ -115,9 +139,12 @@ function SignupFormModal() {
             required
           />
         </label>
+        </div>
+
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" disabled={disable}>Sign Up</button>
+        <button className="sign-up-button" type="submit">Sign Up</button>
       </form>
+      </div>
     </>
   );
 }

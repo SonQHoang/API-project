@@ -71,6 +71,25 @@ label span {
     color: white;
     background-color: red;
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+    width: 100%;
+    height: 2rem;
+}
+
+.review-button[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed 
+}
+
+.city-state.container {
+    display: flex;
+    align-items: center;
+}
+
+.city-input, .state-input {
+    margin-right: 10px;
 }
 
 .error-message {

@@ -36,7 +36,6 @@ function ProfileButton({ user }) {
 
   const closeMenu = () => {
     setShowMenu(false);
-    // setShowCreateSpotForm(false)
   }
 
   const logout = (e) => {
@@ -57,6 +56,7 @@ function ProfileButton({ user }) {
   return (
     <>
       <button className="profile-button" onClick={openMenu}>
+        <i className="fas fa-bars" />
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -66,11 +66,11 @@ function ProfileButton({ user }) {
             <li>Hello {user.firstName}</li>
             <li>{user.email}</li>
             <li>
-              <button className="profile-button" onClick={goToUserSpots}>Manage Spots</button>
+              <button className="profile-manage-spots" onClick={goToUserSpots}>Manage Spots</button>
             </li>
 
             <li>
-              <button className="profile-button" onClick={logout}>Log Out</button>
+              <button className="profile-log-out" onClick={logout}>Log Out</button>
             </li>
           </>
         ) : (

@@ -28,7 +28,8 @@
 }
 
 .logo-container img {
-    height: 50px
+    height: 180px;
+    width: 180px;
 }
 
 .nav-links {
@@ -39,4 +40,7 @@
 
 .create-spot-button {
     margin-right: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 16pt;
 }

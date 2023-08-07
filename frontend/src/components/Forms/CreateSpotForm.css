@@ -1,0 +1,80 @@
+.create-spot-wrapper {
+    /* border: 2px red solid; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+form {
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px;
+}
+
+
+label {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: stretch;
+    margin: 10px;
+}
+
+
+.errors{
+    color:red;
+    display:flex;
+    flex-direction:row
+   }
+
+.spot-form-button   {
+    color: white;
+    background-color: red;
+   }
+
+   .price-input-container {
+    display: flex;
+    align-items: center;
+   }
+
+   .price-sign {
+    margin-right: 5px;
+   }
+
+   .price-input {
+    width: 100%;
+   }
+
+   .city-state-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 550px;
+  }
+
+  .city-state-container .input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 258px;
+  }
+  
+  .city-input,
+  .state-input {
+    margin-right: 10px;
+  }
+  
+.input {
+    width: 550px;
+}
+
+.text-area {
+    height: 107px;
+    width: 550px;
+}
